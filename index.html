@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MBBA Programme Dashboard, September 2026</title>
 <script src="./react.js"></script>
 <script src="./react-dom.js"></script>
@@ -15,16 +16,40 @@
 <style>
 body{margin:0;font-family:Montserrat,'Helvetica Neue',sans-serif;background:#FFFFFF;color:#1B2D71}
 button{font-family:inherit;cursor:pointer}
+*{box-sizing:border-box}
+.r-two>*,.r-main>*,.r-bottom>*{min-width:0}
+.r-scroll>button{flex-shrink:0}
+.r-hint{display:none;font-size:14px;color:#5A6690;margin-bottom:8px}
+@media (max-width:900px){.r-hint{display:block}}
+.r-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.r-waffle>*{width:100%!important;height:auto!important;aspect-ratio:1}
+@media (max-width:1400px){
+.r-main{grid-template-columns:minmax(0,280px) minmax(0,1fr)!important;gap:40px!important}
+.r-main>.r-side{grid-column:1/-1}
+.r-bottom{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:32px!important}
+.r-bottom>.r-recs{grid-column:1/-1}
+}
+@media (max-width:900px){
+.r-main,.r-bottom,.r-two{grid-template-columns:minmax(0,1fr)!important}
+.r-stats{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.r-h2{font-size:26px!important}
+.r-kpi{gap:6px 16px!important;padding:16px 18px!important}
+.r-kpi>span{font-size:15px!important}
+.r-kpi>span:nth-child(2){font-size:18px!important;flex-basis:100%}
+.r-donut{flex-direction:column;gap:24px!important}
+.r-pbars{gap:12px!important;padding:0 4px!important}
+.r-big{font-size:36px!important}
+}
 </style>
 </helmet>
-<div style="width: 1920px; height: 1600px; box-sizing: border-box; background: #FFFFFF; display: flex; flex-direction: column; font-family: Montserrat, 'Helvetica Neue', sans-serif; color: #1B2D71">
+<div style="width: 100%; max-width: 1920px; min-height: 100vh; margin: 0 auto; box-sizing: border-box; background: #FFFFFF; display: flex; flex-direction: column; font-family: Montserrat, 'Helvetica Neue', sans-serif; color: #1B2D71">
 
-  <div style="background: #1B2D71; padding: 0 72px; height: 64px; display: flex; align-items: center; justify-content: space-between">
+  <div style="background: #1B2D71; padding: 12px clamp(16px, 4vw, 72px); min-height: 64px; display: flex; flex-wrap: wrap; gap: 4px 24px; align-items: center; justify-content: space-between">
     <div style="font-size: 18px; font-weight: 800; color: #FFFFFF; letter-spacing: 0.3px">MBBA Programme Dashboard: September 2026</div>
     <div style="font-size: 13px; color: #C9D2EE">Prepared by Asakheni SA for the Kgodiso Development Fund</div>
   </div>
 
-  <div style="padding: 0 72px; border-bottom: 1px solid #E3E7F0; display: flex; gap: 2px">
+  <div class="r-scroll" style="padding: 0 clamp(16px, 4vw, 72px); border-bottom: 1px solid #E3E7F0; display: flex; gap: 2px; white-space: nowrap">
     <sc-for list="{{tabs}}" as="t" hint-placeholder-count="7">
       <button type="button" onClick="{{t.pick}}" style="{{t.style}}">{{t.label}}</button>
     </sc-for>
@@ -32,7 +57,7 @@ button{font-family:inherit;cursor:pointer}
 
   <div style="{{monthRowStyle}}">
     <div style="font-size: 14px; font-weight: 700; letter-spacing: 1.2px; color: #5A6690">MONTH, 2026</div>
-    <div style="display: flex; gap: 6px">
+    <div class="r-scroll" style="display: flex; gap: 6px; max-width: 100%; white-space: nowrap">
       <sc-for list="{{months}}" as="mo" hint-placeholder-count="10">
         <button type="button" onClick="{{mo.pick}}" style="{{mo.style}}">{{mo.label}}</button>
       </sc-for>
@@ -40,13 +65,13 @@ button{font-family:inherit;cursor:pointer}
   </div>
 
   <sc-if value="{{notOv}}" hint-placeholder-val="{{ false }}">
-  <div style="flex-grow: 1; padding: 32px 72px 0; display: flex; flex-direction: column; gap: 44px">
+  <div style="flex-grow: 1; padding: 32px clamp(16px, 4vw, 72px) 0; display: flex; flex-direction: column; gap: 44px">
 
-    <h2 style="margin: 0; font-size: 38px; font-weight: 800; color: #1B2D71; line-height: 1.2; max-width: 1500px">{{v.headline}}</h2>
+    <h2 class="r-h2" style="margin: 0; font-size: 38px; font-weight: 800; color: #1B2D71; line-height: 1.2; max-width: 1500px">{{v.headline}}</h2>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(820px, 1fr)); gap: 16px; margin-top: -16px">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 640px), 1fr)); gap: 16px; margin-top: -16px">
       <sc-for list="{{kpis}}" as="k" hint-placeholder-count="2">
-        <div style="display: flex; align-items: center; gap: 40px; background: #F2F3F7; border-radius: 12px; padding: 20px 32px; color: #1B2D71">
+        <div class="r-kpi" style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 32px; background: #F2F3F7; border-radius: 12px; padding: 20px 32px; color: #1B2D71">
           <span style="font-size: 15px; font-weight: 800; letter-spacing: 2px; color: #8A93AE">LINKED KPI</span>
           <span style="font-size: 21px; font-weight: 800; color: #1B2D71">{{k.name}}</span>
           <span style="font-size: 20px; color: #8A93AE">Target: {{k.target}}</span>
@@ -56,11 +81,11 @@ button{font-family:inherit;cursor:pointer}
       </sc-for>
     </div>
 
-    <div style="display: grid; grid-template-columns: 320px minmax(0, 1fr) 520px; gap: 64px; align-items: start">
-      <div style="display: flex; flex-direction: column; gap: 18px">
+    <div class="r-main" style="display: grid; grid-template-columns: 320px minmax(0, 1fr) 520px; gap: 64px; align-items: start">
+      <div class="r-stats" style="display: flex; flex-direction: column; gap: 18px">
         <sc-for list="{{v.stats}}" as="s" hint-placeholder-count="3">
           <div style="background: #EEF2F9; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 6px">
-            <div style="font-size: 46px; font-weight: 800; color: #3DAB2F; line-height: 1">{{s.value}}</div>
+            <div style="font-size: clamp(32px, 4vw, 46px); font-weight: 800; color: #3DAB2F; line-height: 1">{{s.value}}</div>
             <div style="{{s.chgStyle}}">{{s.chg}}</div>
             <div style="font-size: 19px; font-weight: 700; color: #1B2D71">{{s.label}}</div>
             <div style="font-size: 16px; color: #5A6690">{{s.sub}}</div>
@@ -72,7 +97,7 @@ button{font-family:inherit;cursor:pointer}
         <div style="font-size: 22px; font-weight: 800; color: #1B2D71; text-align: center; text-transform: uppercase; letter-spacing: 0.8px">{{chartTitle}}</div>
 
         <sc-if value="{{showWaffle}}" hint-placeholder-val="{{ false }}">
-          <div style="display: grid; grid-template-columns: repeat(10, 52px); gap: 10px; justify-content: center; padding: 10px 0">
+          <div class="r-waffle" style="display: grid; grid-template-columns: repeat(10, minmax(0, 52px)); gap: clamp(4px, 1vw, 10px); justify-content: center; padding: 10px 0">
             <sc-for list="{{waffle}}" as="wf" hint-placeholder-count="50">
               <div style="{{wf.style}}"></div>
             </sc-for>
@@ -80,7 +105,7 @@ button{font-family:inherit;cursor:pointer}
         </sc-if>
 
         <sc-if value="{{showDiverge}}" hint-placeholder-val="{{ false }}">
-          <div style="display: flex; gap: 12px; padding: 0 12px">
+          <div class="r-scroll"><div style="display: flex; gap: 12px; padding: 0 12px; min-width: 560px">
             <sc-for list="{{div}}" as="dv" hint-placeholder-count="9">
               <div style="flex-grow: 1; flex-basis: 0; display: flex; flex-direction: column; align-items: center">
                 <div style="font-size: 15px; font-weight: 700; color: #5A6690; height: 26px">{{dv.total}}</div>
@@ -96,17 +121,17 @@ button{font-family:inherit;cursor:pointer}
                 <div style="font-size: 15px; font-weight: 600; color: #5A6690; padding-top: 8px">{{dv.label}}</div>
               </div>
             </sc-for>
-          </div>
+          </div></div>
           <div style="font-size: 15px; color: #5A6690; text-align: center">Grey figures above each month: active participants with a full deposit at month end.</div>
         </sc-if>
 
         <sc-if value="{{showLine}}" hint-placeholder-val="{{ false }}">
-          <div style="display: flex; justify-content: center"><svg width="860" height="330" viewBox="0 0 860 330" xmlns="http://www.w3.org/2000/svg" font-family="Montserrat, Helvetica Neue, sans-serif" role="img" aria-label="Machines in place and participants waiting, January to September 2026"><line x1="50" y1="290.0" x2="820" y2="290.0" stroke="#E3E7F0" stroke-width="1"></line><text x="38" y="295.0" font-size="14" fill="#5A6690" text-anchor="end">0</text><line x1="50" y1="201.3" x2="820" y2="201.3" stroke="#E3E7F0" stroke-width="1"></line><text x="38" y="206.3" font-size="14" fill="#5A6690" text-anchor="end">10</text><line x1="50" y1="112.7" x2="820" y2="112.7" stroke="#E3E7F0" stroke-width="1"></line><text x="38" y="117.7" font-size="14" fill="#5A6690" text-anchor="end">20</text><line x1="50" y1="24.0" x2="820" y2="24.0" stroke="#E3E7F0" stroke-width="1"></line><text x="38" y="29.0" font-size="14" fill="#5A6690" text-anchor="end">30</text><polyline points="50.0,130.4 146.2,121.5 242.5,94.9 338.8,94.9 435.0,77.2 531.2,77.2 627.5,86.1 723.8,77.2 820.0,77.2" fill="none" stroke="#1B2D71" stroke-width="4" stroke-linejoin="round"></polyline><circle cx="50.0" cy="130.4" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="50.0" y="116.4" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">18</text><circle cx="146.2" cy="121.5" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="146.2" y="107.5" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">19</text><circle cx="242.5" cy="94.9" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="242.5" y="80.9" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">22</text><circle cx="338.8" cy="94.9" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="338.8" y="80.9" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">22</text><circle cx="435.0" cy="77.2" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="435.0" y="63.2" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">24</text><circle cx="531.2" cy="77.2" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="531.2" y="63.2" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">24</text><circle cx="627.5" cy="86.1" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="627.5" y="72.1" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">23</text><circle cx="723.8" cy="77.2" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="723.8" y="63.2" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">24</text><circle cx="820.0" cy="77.2" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="820.0" y="63.2" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">24</text><polyline points="50.0,174.7 146.2,174.7 242.5,183.6 338.8,174.7 435.0,210.2 531.2,210.2 627.5,192.5 723.8,210.2 820.0,219.1" fill="none" stroke="#3DAB2F" stroke-width="4" stroke-linejoin="round"></polyline><circle cx="50.0" cy="174.7" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="50.0" y="200.7" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">13</text><circle cx="146.2" cy="174.7" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="146.2" y="200.7" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">13</text><circle cx="242.5" cy="183.6" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="242.5" y="209.6" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">12</text><circle cx="338.8" cy="174.7" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="338.8" y="200.7" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">13</text><circle cx="435.0" cy="210.2" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="435.0" y="236.2" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">9</text><circle cx="531.2" cy="210.2" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="531.2" y="236.2" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">9</text><circle cx="627.5" cy="192.5" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="627.5" y="218.5" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">11</text><circle cx="723.8" cy="210.2" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="723.8" y="236.2" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">9</text><circle cx="820.0" cy="219.1" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="820.0" y="245.1" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">8</text><text x="50.0" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Jan</text><text x="146.2" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Feb</text><text x="242.5" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Mar</text><text x="338.8" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Apr</text><text x="435.0" y="320" font-size="15" fill="#5A6690" text-anchor="middle">May</text><text x="531.2" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Jun</text><text x="627.5" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Jul</text><text x="723.8" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Aug</text><text x="820.0" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Sep</text></svg></div>
+          <div style="display: flex; justify-content: center"><svg width="860" height="330" style="max-width: 100%; height: auto" viewBox="0 0 860 330" xmlns="http://www.w3.org/2000/svg" font-family="Montserrat, Helvetica Neue, sans-serif" role="img" aria-label="Machines in place and participants waiting, January to September 2026"><line x1="50" y1="290.0" x2="820" y2="290.0" stroke="#E3E7F0" stroke-width="1"></line><text x="38" y="295.0" font-size="14" fill="#5A6690" text-anchor="end">0</text><line x1="50" y1="201.3" x2="820" y2="201.3" stroke="#E3E7F0" stroke-width="1"></line><text x="38" y="206.3" font-size="14" fill="#5A6690" text-anchor="end">10</text><line x1="50" y1="112.7" x2="820" y2="112.7" stroke="#E3E7F0" stroke-width="1"></line><text x="38" y="117.7" font-size="14" fill="#5A6690" text-anchor="end">20</text><line x1="50" y1="24.0" x2="820" y2="24.0" stroke="#E3E7F0" stroke-width="1"></line><text x="38" y="29.0" font-size="14" fill="#5A6690" text-anchor="end">30</text><polyline points="50.0,130.4 146.2,121.5 242.5,94.9 338.8,94.9 435.0,77.2 531.2,77.2 627.5,86.1 723.8,77.2 820.0,77.2" fill="none" stroke="#1B2D71" stroke-width="4" stroke-linejoin="round"></polyline><circle cx="50.0" cy="130.4" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="50.0" y="116.4" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">18</text><circle cx="146.2" cy="121.5" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="146.2" y="107.5" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">19</text><circle cx="242.5" cy="94.9" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="242.5" y="80.9" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">22</text><circle cx="338.8" cy="94.9" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="338.8" y="80.9" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">22</text><circle cx="435.0" cy="77.2" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="435.0" y="63.2" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">24</text><circle cx="531.2" cy="77.2" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="531.2" y="63.2" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">24</text><circle cx="627.5" cy="86.1" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="627.5" y="72.1" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">23</text><circle cx="723.8" cy="77.2" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="723.8" y="63.2" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">24</text><circle cx="820.0" cy="77.2" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="820.0" y="63.2" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">24</text><polyline points="50.0,174.7 146.2,174.7 242.5,183.6 338.8,174.7 435.0,210.2 531.2,210.2 627.5,192.5 723.8,210.2 820.0,219.1" fill="none" stroke="#3DAB2F" stroke-width="4" stroke-linejoin="round"></polyline><circle cx="50.0" cy="174.7" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="50.0" y="200.7" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">13</text><circle cx="146.2" cy="174.7" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="146.2" y="200.7" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">13</text><circle cx="242.5" cy="183.6" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="242.5" y="209.6" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">12</text><circle cx="338.8" cy="174.7" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="338.8" y="200.7" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">13</text><circle cx="435.0" cy="210.2" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="435.0" y="236.2" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">9</text><circle cx="531.2" cy="210.2" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="531.2" y="236.2" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">9</text><circle cx="627.5" cy="192.5" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="627.5" y="218.5" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">11</text><circle cx="723.8" cy="210.2" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="723.8" y="236.2" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">9</text><circle cx="820.0" cy="219.1" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="820.0" y="245.1" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">8</text><text x="50.0" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Jan</text><text x="146.2" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Feb</text><text x="242.5" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Mar</text><text x="338.8" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Apr</text><text x="435.0" y="320" font-size="15" fill="#5A6690" text-anchor="middle">May</text><text x="531.2" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Jun</text><text x="627.5" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Jul</text><text x="723.8" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Aug</text><text x="820.0" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Sep</text></svg></div>
         </sc-if>
 
         <sc-if value="{{showDonut}}" hint-placeholder-val="{{ false }}">
-          <div style="display: flex; align-items: center; justify-content: center; gap: 56px; padding: 10px 0">
-            <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" font-family="Montserrat, Helvetica Neue, sans-serif" role="img" aria-label="Progress to the 50-machine target">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 56px; padding: 10px 0" class="r-donut">
+            <svg width="300" height="300" style="max-width: 100%; height: auto" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" font-family="Montserrat, Helvetica Neue, sans-serif" role="img" aria-label="Progress to the 50-machine target">
               <circle cx="150" cy="150" r="120" fill="none" stroke="#EEF1F7" stroke-width="42"></circle>
               <circle cx="150" cy="150" r="120" fill="none" stroke="#1B2D71" stroke-width="42" stroke-dasharray="{{dn.a}}" stroke-dashoffset="0" transform="rotate(-90 150 150)"></circle>
               <circle cx="150" cy="150" r="120" fill="none" stroke="#3DAB2F" stroke-width="42" stroke-dasharray="{{dn.b}}" stroke-dashoffset="{{dn.bo}}" transform="rotate(-90 150 150)"></circle>
@@ -126,7 +151,7 @@ button{font-family:inherit;cursor:pointer}
         </sc-if>
 
         <sc-if value="{{showPbars}}" hint-placeholder-val="{{ false }}">
-          <div style="height: 300px; display: flex; align-items: flex-end; gap: 40px; border-bottom: 1px solid #C9D2EE; padding: 0 24px">
+          <div class="r-pbars" style="height: 300px; display: flex; align-items: flex-end; gap: 40px; border-bottom: 1px solid #C9D2EE; padding: 0 24px">
             <sc-for list="{{pbars}}" as="pb" hint-placeholder-count="4">
               <div style="flex-grow: 1; flex-basis: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 8px; height: 100%">
                 <div style="{{pb.valueStyle}}">{{pb.value}}</div>
@@ -135,7 +160,7 @@ button{font-family:inherit;cursor:pointer}
               </div>
             </sc-for>
           </div>
-          <div style="display: flex; gap: 40px; padding: 0 24px">
+          <div class="r-pbars" style="display: flex; gap: 40px; padding: 0 24px">
             <sc-for list="{{pbars}}" as="pb" hint-placeholder-count="4">
               <div style="{{pb.labelStyle}}">{{pb.label}}</div>
             </sc-for>
@@ -159,7 +184,7 @@ button{font-family:inherit;cursor:pointer}
 
         <sc-if value="{{showGauge}}" hint-placeholder-val="{{ false }}">
           <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding-top: 10px">
-            <svg width="380" height="220" viewBox="0 0 380 220" xmlns="http://www.w3.org/2000/svg" font-family="Montserrat, Helvetica Neue, sans-serif" role="img" aria-label="Share of active participants trained">
+            <svg width="380" height="220" style="max-width: 100%; height: auto" viewBox="0 0 380 220" xmlns="http://www.w3.org/2000/svg" font-family="Montserrat, Helvetica Neue, sans-serif" role="img" aria-label="Share of active participants trained">
               <circle cx="190" cy="190" r="150" fill="none" stroke="#EEF1F7" stroke-width="40" stroke-dasharray="471.2 942.5" transform="rotate(180 190 190)"></circle>
               <circle cx="190" cy="190" r="150" fill="none" stroke="#1B2D71" stroke-width="40" stroke-dasharray="{{gauge.len}}" transform="rotate(180 190 190)"></circle>
               <text x="190" y="170" font-size="52" font-weight="800" fill="#1B2D71" text-anchor="middle">{{gauge.pct}}</text>
@@ -170,7 +195,7 @@ button{font-family:inherit;cursor:pointer}
         </sc-if>
 
         <sc-if value="{{showStrip}}" hint-placeholder-val="{{ false }}">
-          <div style="display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 10px; padding: 10px 0">
+          <div class="r-scroll"><div style="display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 10px; padding: 10px 0; min-width: 760px">
             <sc-for list="{{strip}}" as="st" hint-placeholder-count="9">
               <div style="background: #F5F7FB; border-radius: 10px; padding: 16px 8px; display: flex; flex-direction: column; align-items: center; gap: 12px; min-height: 170px">
                 <div style="font-size: 16px; font-weight: 700; color: #1B2D71">{{st.label}}</div>
@@ -182,7 +207,7 @@ button{font-family:inherit;cursor:pointer}
                 <div style="font-size: 14px; color: #5A6690; text-align: center">{{st.total}}</div>
               </div>
             </sc-for>
-          </div>
+          </div></div>
         </sc-if>
 
         <sc-if value="{{showBullets}}" hint-placeholder-val="{{ false }}">
@@ -233,7 +258,7 @@ button{font-family:inherit;cursor:pointer}
         </sc-if>
 
         <sc-if value="{{showYoy}}" hint-placeholder-val="{{ false }}">
-          <div style="height: 300px; display: flex; align-items: flex-end; gap: 14px; border-bottom: 2px solid #1B2D71; padding: 0 12px">
+          <div class="r-scroll"><div style="min-width: 560px; display: flex; flex-direction: column; gap: 8px"><div style="height: 300px; display: flex; align-items: flex-end; gap: 14px; border-bottom: 2px solid #1B2D71; padding: 0 12px">
             <sc-for list="{{yoy}}" as="yy" hint-placeholder-count="9">
               <div style="flex-grow: 1; flex-basis: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 6px">
                 <div style="{{yy.vStyle}}">{{yy.v}}</div>
@@ -248,18 +273,18 @@ button{font-family:inherit;cursor:pointer}
             <sc-for list="{{yoy}}" as="yy" hint-placeholder-count="9">
               <div style="{{yy.lStyle}}">{{yy.label}}</div>
             </sc-for>
-          </div>
+          </div></div></div>
         </sc-if>
 
         <sc-if value="{{showLegend}}" hint-placeholder-val="{{ true }}">
-          <div style="display: flex; justify-content: center; gap: 24px; font-size: 15px; color: #1B2D71">
+          <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 24px; font-size: 15px; color: #1B2D71">
             <sc-for list="{{legend}}" as="lg" hint-placeholder-count="3">
               <div style="display: flex; align-items: center; gap: 8px"><div style="{{lg.sw}}"></div>{{lg.name}}</div>
             </sc-for>
           </div>
         </sc-if>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 24px">
+      <div class="r-side" style="display: flex; flex-direction: column; gap: 24px">
         <sc-if value="{{isAll}}" hint-placeholder-val="{{ true }}">
           <div style="display: flex; flex-direction: column; gap: 16px">
             <div style="font-size: 15px; font-weight: 800; letter-spacing: 1.6px; color: #1B2D71">KEY INSIGHTS</div>
@@ -282,10 +307,10 @@ button{font-family:inherit;cursor:pointer}
     </div>
 
     <sc-if value="{{isAll}}" hint-placeholder-val="{{ true }}">
-      <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) 400px; gap: 56px; align-items: start; padding-bottom: 8px">
+      <div class="r-bottom" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) 400px; gap: 56px; align-items: start; padding-bottom: 8px">
         <div style="display: flex; flex-direction: column; gap: 14px">
           <div style="font-size: 15px; font-weight: 800; letter-spacing: 1.6px; color: #1B2D71">MONTH BY MONTH</div>
-          <div style="display: flex; flex-direction: column; border-top: 1px solid #E3E7F0">
+          <div class="r-scroll"><div style="display: flex; flex-direction: column; border-top: 1px solid #E3E7F0; min-width: 600px">
             <div style="{{thStyle}}">
               <sc-for list="{{v.head}}" as="h" hint-placeholder-count="4"><div>{{h}}</div></sc-for>
             </div>
@@ -294,11 +319,11 @@ button{font-family:inherit;cursor:pointer}
                 <sc-for list="{{r}}" as="cell" hint-placeholder-count="4"><div>{{cell}}</div></sc-for>
               </div>
             </sc-for>
-          </div>
+          </div></div>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px">
           <div style="font-size: 15px; font-weight: 800; letter-spacing: 1.6px; color: #1B2D71">SEPTEMBER IN DETAIL</div>
-          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px">
+          <div class="r-two" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px">
             <sc-for list="{{cards}}" as="cd" hint-placeholder-count="4">
               <div style="background: #F5F7FB; border-radius: 14px; padding: 22px 26px; display: flex; flex-direction: column; gap: 10px">
                 <div style="{{cd.titleStyle}}">{{cd.title}}</div>
@@ -309,7 +334,7 @@ button{font-family:inherit;cursor:pointer}
             </sc-for>
           </div>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 14px">
+        <div class="r-recs" style="display: flex; flex-direction: column; gap: 14px">
           <div style="font-size: 15px; font-weight: 800; letter-spacing: 1.6px; color: #2E7D23">WHAT WE RECOMMEND</div>
           <div style="background: #F5F7FB; border-radius: 14px; padding: 24px 28px; display: flex; flex-direction: column; gap: 14px">
             <sc-for list="{{v.recs}}" as="rc" hint-placeholder-count="4">
@@ -323,26 +348,26 @@ button{font-family:inherit;cursor:pointer}
   </sc-if>
 
   <sc-if value="{{isOv}}" hint-placeholder-val="{{ true }}">
-    <div style="flex-grow: 1; padding: 32px 72px 0; display: flex; flex-direction: column; gap: 44px">
-      <h2 style="margin: 0; font-size: 42px; font-weight: 800; color: #1B2D71; line-height: 1.25; max-width: 1150px">{{ov.headline}}</h2>
-      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+    <div style="flex-grow: 1; padding: 32px clamp(16px, 4vw, 72px) 0; display: flex; flex-direction: column; gap: 44px">
+      <h2 class="r-h2" style="margin: 0; font-size: 42px; font-weight: 800; color: #1B2D71; line-height: 1.25; max-width: 1150px">{{ov.headline}}</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 24px">
         <sc-for list="{{ov.tiles}}" as="tl" hint-placeholder-count="8">
           <div style="background: #EEF2F9; border-radius: 12px; padding: 28px 30px 22px; display: flex; flex-direction: column; gap: 10px">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
               <div style="font-size: 15px; font-weight: 800; letter-spacing: 1.6px; color: #1B2D71">{{tl.label}}</div>
               <div style="{{tl.dot}}"></div>
             </div>
-            <div style="font-size: 48px; font-weight: 800; color: #1B2D71; line-height: 1.05">{{tl.value}}</div>
+            <div style="font-size: clamp(34px, 4vw, 48px); font-weight: 800; color: #1B2D71; line-height: 1.05">{{tl.value}}</div>
             <div style="font-size: 17px; color: #1B2D71; line-height: 1.45; flex-grow: 1">{{tl.sub}}</div>
             <button type="button" onClick="{{tl.go}}" style="align-self: flex-start; min-height: 40px; padding: 0; border: none; background: transparent; color: #3DAB2F; font-size: 18px; font-weight: 800">Open →</button>
           </div>
         </sc-for>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px">
+      <div class="r-two" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px">
         <div style="border: 1px solid #E3E7F0; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
           <div style="font-size: 20px; font-weight: 800; color: #1B2D71; text-transform: uppercase; letter-spacing: 0.6px">Monthly Revenue, 2026</div>
-          <div style="position: relative; height: 270px; display: flex; gap: 10px; align-items: flex-start">
+          <div class="r-scroll"><div style="position: relative; height: 270px; display: flex; gap: 10px; align-items: flex-start; min-width: 480px">
             <sc-for list="{{ov.revBars}}" as="rb" hint-placeholder-count="9">
               <div style="flex-grow: 1; flex-basis: 0; display: flex; flex-direction: column; align-items: center; height: 100%">
                 <div style="height: 210px; width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px">
@@ -359,7 +384,7 @@ button{font-family:inherit;cursor:pointer}
                 <div style="font-size: 13px; color: #5A6690">{{rb.label}}</div>
               </div>
             </sc-for>
-          </div>
+          </div></div>
           <div style="display: flex; gap: 20px; font-size: 14px; color: #1B2D71; flex-wrap: wrap">
             <div style="display: flex; align-items: center; gap: 8px"><div style="width: 14px; height: 14px; border-radius: 3px; background: #1B2D71"></div>Revenue (Verified Sales)</div>
             <div style="display: flex; align-items: center; gap: 8px"><div style="width: 14px; height: 14px; border-radius: 3px; background: #3DAB2F"></div>Net Profit Reported by Operators</div>
@@ -385,7 +410,7 @@ button{font-family:inherit;cursor:pointer}
               <div style="flex-grow: 1; flex-basis: 0; text-align: center; font-size: 13px; color: #5A6690">{{pbx.label}}</div>
             </sc-for>
           </div>
-          <div style="display: flex; gap: 20px; font-size: 14px; color: #1B2D71">
+          <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 14px; color: #1B2D71">
             <div style="display: flex; align-items: center; gap: 8px"><div style="width: 14px; height: 14px; border-radius: 3px; background: #1B2D71"></div>Machine in Place</div>
             <div style="display: flex; align-items: center; gap: 8px"><div style="width: 14px; height: 14px; border-radius: 3px; box-sizing: border-box; background: #E7F5E4; border: 2px solid #3DAB2F"></div>Waiting for a Machine</div>
           </div>
@@ -393,7 +418,7 @@ button{font-family:inherit;cursor:pointer}
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px">
+      <div class="r-two" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px">
         <div style="border-left: 6px solid #3DAB2F; background: #F5F7FB; border-radius: 0 14px 14px 0; padding: 22px 26px; display: flex; flex-direction: column; gap: 8px">
           <div style="font-size: 15px; font-weight: 800; letter-spacing: 1px; color: #2E7D23">SUCCESS STORY</div>
           <div style="font-size: 18px; line-height: 1.5; color: #1B2D71">Tsholofetso Manana has paid off her programme machine at Hatfield Studios and bought a second machine independently.</div>
@@ -407,18 +432,18 @@ button{font-family:inherit;cursor:pointer}
   </sc-if>
 
   <sc-if value="{{isKpi}}" hint-placeholder-val="{{ false }}">
-    <div style="flex-grow: 1; padding: 32px 72px 0; display: flex; flex-direction: column; gap: 32px">
+    <div style="flex-grow: 1; padding: 32px clamp(16px, 4vw, 72px) 0; display: flex; flex-direction: column; gap: 32px">
       <div style="display: flex; flex-direction: column; gap: 10px">
-        <h2 style="margin: 0; font-size: 42px; font-weight: 800; color: #1B2D71; line-height: 1.25; max-width: 1500px">KPI Dashboard: Progress Against 14 Programme KPIs, January to September 2026</h2>
+        <h2 class="r-h2" style="margin: 0; font-size: 42px; font-weight: 800; color: #1B2D71; line-height: 1.25; max-width: 1500px">KPI Dashboard: Progress Against 14 Programme KPIs, January to September 2026</h2>
         <div style="font-size: 20px; color: #5A6690">{{kpiSummary}}</div>
       </div>
-      <div style="background: #F2F3F7; border-radius: 12px; padding: 22px 32px; display: flex; gap: 48px; align-items: center">
+      <div style="background: #F2F3F7; border-radius: 12px; padding: 22px clamp(16px, 3vw, 32px); display: flex; flex-wrap: wrap; gap: 12px 40px; align-items: center">
         <sc-for list="{{kpiChips}}" as="kc" hint-placeholder-count="4">
           <div style="display: flex; align-items: center; gap: 10px"><span style="{{kc.dot}}"></span><span style="{{kc.textStyle}}">{{kc.n}} {{kc.label}}</span></div>
         </sc-for>
         <span style="margin-left: auto; font-size: 16px; color: #5A6690">Status as at September 2026</span>
       </div>
-      <div style="display: flex; flex-direction: column">
+      <div class="r-hint">Swipe sideways to see every month, status and comment.</div><div class="r-scroll"><div style="display: flex; flex-direction: column; min-width: 1500px">
         <div style="display: grid; grid-template-columns: 90px 280px 90px repeat(9, minmax(0, 1fr)) 130px 300px; padding: 0 0 14px; border-bottom: 1px solid #D5DBE8; font-size: 16px; font-weight: 800; color: #1B2D71; align-items: end">
           <div style="padding: 0 10px">KPI</div><div style="padding: 0 10px">Measure</div><div style="padding: 0 10px">Target</div>
           <sc-for list="{{kpiMonths}}" as="mh" hint-placeholder-count="9"><div style="{{mh.style}}">{{mh.label}}</div></sc-for>
@@ -434,11 +459,11 @@ button{font-family:inherit;cursor:pointer}
             <div style="padding: 0 10px; font-size: 15px; color: #1B2D71">{{kr.note}}</div>
           </div>
         </sc-for>
-      </div>
+      </div></div>
     </div>
   </sc-if>
 
-  <div style="padding: 24px 72px 28px; font-size: 17px; font-style: italic; color: #5A6690">{{about}}</div>
+  <div style="padding: 24px clamp(16px, 4vw, 72px) 28px; font-size: 17px; font-style: italic; color: #5A6690">{{about}}</div>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1920,"height":1600}}'>
@@ -535,7 +560,7 @@ class Component extends DCLogic {
       });
       var profitNote = 'Net profit is the total reported by survey respondents: R33.7k in June, R1.2k in July, a R1.4k loss in August (red) and R15.2k in September. Survey from June 2026.';
       return pack({ isOv: true, notOv: false, months: months, tabs: tabs, about: O.about,
-        monthRowStyle: 'padding: 20px 72px; display: flex; align-items: center; gap: 16px',
+        monthRowStyle: 'padding: 20px clamp(16px, 4vw, 72px); display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px',
         ov: { headline: isAll ? O.headline : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September'][mi] + ' 2026: ' + O.full[mi] * 2 + '% of Places Filled, ' + O.inp[mi] * 2 + '% of Machines Placed and ' + O.cov[mi] + '% of Participants Trained',
               tiles: tiles, revBars: revBars, partBars: partBars, profitNote: profitNote } });
     }
@@ -653,7 +678,7 @@ class Component extends DCLogic {
     var cw = CFG.all.head.length;
     var grid = 'display: grid; grid-template-columns: 1.2fr' + ' 1fr'.repeat(cw - 1) + '; padding: ';
     return { v: v, months: months, tabs: tabs, kpis: kpis, chartTitle: chartTitle, waffle: waffle, div: div, dn: dn, legend: legend, cards: cards,
-      showWaffle: type === 'waffle', showDiverge: type === 'diverge', showLine: type === 'line', showDonut: type === 'donut', isOv: false, notOv: true, ov: { headline: '', hero: [], areas: [], chips: [], wins: [], flags: [] }, showYoy: type === 'yoy', yoy: yoy, isKpi: false, kpiChips: [], kpiRows: [], monthRowStyle: 'padding: 20px 72px; display: flex; align-items: center; gap: 16px', showLegend: ['waffle', 'diverge', 'line', 'hbars', 'strip', 'dumbbell', 'yoy'].indexOf(type) >= 0, showDumbbell: type === 'dumbbell', showObars: type === 'obars', dumb: dumb, obars: obars, showHbars: type === 'hbars', showGauge: type === 'gauge', showStrip: type === 'strip', showBullets: type === 'bullets', hbars: hbars, gauge: gauge, strip: strip, bullets: bullets, showPbars: type === 'pbars', pbars: pbars,
+      showWaffle: type === 'waffle', showDiverge: type === 'diverge', showLine: type === 'line', showDonut: type === 'donut', isOv: false, notOv: true, ov: { headline: '', hero: [], areas: [], chips: [], wins: [], flags: [] }, showYoy: type === 'yoy', yoy: yoy, isKpi: false, kpiChips: [], kpiRows: [], monthRowStyle: 'padding: 20px clamp(16px, 4vw, 72px); display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px', showLegend: ['waffle', 'diverge', 'line', 'hbars', 'strip', 'dumbbell', 'yoy'].indexOf(type) >= 0, showDumbbell: type === 'dumbbell', showObars: type === 'obars', dumb: dumb, obars: obars, showHbars: type === 'hbars', showGauge: type === 'gauge', showStrip: type === 'strip', showBullets: type === 'bullets', hbars: hbars, gauge: gauge, strip: strip, bullets: bullets, showPbars: type === 'pbars', pbars: pbars,
       isAll: isAll, notAll: !isAll || isRep, monthOnly: !isAll, about: CFG.about, hasOpen: !!(isAll && v.open), openItems: (isAll && v.open) ? v.open : [],
       thStyle: grid + '14px 18px; font-size: 16px; font-weight: 800; color: #5A6690',
       trStyle: grid + '12px 18px; font-size: 18px; color: #1B2D71; border-top: 1px solid #E3E7F0' };
