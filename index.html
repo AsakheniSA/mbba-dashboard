@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MBBA Programme Dashboard, September 2026</title>
+<script src="./react.js"></script>
+<script src="./react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Montserrat,'Helvetica Neue',sans-serif;background:#FFFFFF;color:#1B2D71}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 1920px; height: 1600px; box-sizing: border-box; background: #FFFFFF; display: flex; flex-direction: column; font-family: Montserrat, 'Helvetica Neue', sans-serif; color: #1B2D71">
+
+  <div style="background: #1B2D71; padding: 0 72px; height: 64px; display: flex; align-items: center; justify-content: space-between">
+    <div style="font-size: 18px; font-weight: 800; color: #FFFFFF; letter-spacing: 0.3px">MBBA Programme Dashboard: September 2026</div>
+    <div style="font-size: 13px; color: #C9D2EE">Prepared by Asakheni SA for the Kgodiso Development Fund</div>
+  </div>
+
+  <div style="padding: 0 72px; border-bottom: 1px solid #E3E7F0; display: flex; gap: 2px">
+    <sc-for list="{{tabs}}" as="t" hint-placeholder-count="7">
+      <button type="button" onClick="{{t.pick}}" style="{{t.style}}">{{t.label}}</button>
+    </sc-for>
+  </div>
+
+  <div style="{{monthRowStyle}}">
+    <div style="font-size: 14px; font-weight: 700; letter-spacing: 1.2px; color: #5A6690">MONTH, 2026</div>
+    <div style="display: flex; gap: 6px">
+      <sc-for list="{{months}}" as="mo" hint-placeholder-count="10">
+        <button type="button" onClick="{{mo.pick}}" style="{{mo.style}}">{{mo.label}}</button>
+      </sc-for>
+    </div>
+  </div>
+
+  <sc-if value="{{notOv}}" hint-placeholder-val="{{ false }}">
+  <div style="flex-grow: 1; padding: 32px 72px 0; display: flex; flex-direction: column; gap: 44px">
+
+    <h2 style="margin: 0; font-size: 38px; font-weight: 800; color: #1B2D71; line-height: 1.2; max-width: 1500px">{{v.headline}}</h2>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(820px, 1fr)); gap: 16px; margin-top: -16px">
+      <sc-for list="{{kpis}}" as="k" hint-placeholder-count="2">
+        <div style="display: flex; align-items: center; gap: 40px; background: #F2F3F7; border-radius: 12px; padding: 20px 32px; color: #1B2D71">
+          <span style="font-size: 15px; font-weight: 800; letter-spacing: 2px; color: #8A93AE">LINKED KPI</span>
+          <span style="font-size: 21px; font-weight: 800; color: #1B2D71">{{k.name}}</span>
+          <span style="font-size: 20px; color: #8A93AE">Target: {{k.target}}</span>
+          <span style="font-size: 20px; color: #1B2D71">{{k.nowLabel}}: <strong style="font-weight: 800">{{k.now}}</strong></span>
+          <span style="display: flex; align-items: center; gap: 10px; margin-left: auto"><span style="{{k.dot}}"></span><span style="{{k.statusStyle}}">{{k.status}}</span></span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 320px minmax(0, 1fr) 520px; gap: 64px; align-items: start">
+      <div style="display: flex; flex-direction: column; gap: 18px">
+        <sc-for list="{{v.stats}}" as="s" hint-placeholder-count="3">
+          <div style="background: #EEF2F9; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 6px">
+            <div style="font-size: 46px; font-weight: 800; color: #3DAB2F; line-height: 1">{{s.value}}</div>
+            <div style="{{s.chgStyle}}">{{s.chg}}</div>
+            <div style="font-size: 19px; font-weight: 700; color: #1B2D71">{{s.label}}</div>
+            <div style="font-size: 16px; color: #5A6690">{{s.sub}}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 18px">
+        <div style="font-size: 22px; font-weight: 800; color: #1B2D71; text-align: center; text-transform: uppercase; letter-spacing: 0.8px">{{chartTitle}}</div>
+
+        <sc-if value="{{showWaffle}}" hint-placeholder-val="{{ false }}">
+          <div style="display: grid; grid-template-columns: repeat(10, 52px); gap: 10px; justify-content: center; padding: 10px 0">
+            <sc-for list="{{waffle}}" as="wf" hint-placeholder-count="50">
+              <div style="{{wf.style}}"></div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{showDiverge}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; gap: 12px; padding: 0 12px">
+            <sc-for list="{{div}}" as="dv" hint-placeholder-count="9">
+              <div style="flex-grow: 1; flex-basis: 0; display: flex; flex-direction: column; align-items: center">
+                <div style="font-size: 15px; font-weight: 700; color: #5A6690; height: 26px">{{dv.total}}</div>
+                <div style="height: 120px; width: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px">
+                  <div style="font-size: 17px; font-weight: 800; color: #2E7D23">{{dv.jl}}</div>
+                  <div style="{{dv.jbar}}"></div>
+                </div>
+                <div style="height: 2px; width: 100%; background: #1B2D71"></div>
+                <div style="height: 120px; width: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; gap: 4px">
+                  <div style="{{dv.lbar}}"></div>
+                  <div style="font-size: 17px; font-weight: 800; color: #B00000">{{dv.ll}}</div>
+                </div>
+                <div style="font-size: 15px; font-weight: 600; color: #5A6690; padding-top: 8px">{{dv.label}}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size: 15px; color: #5A6690; text-align: center">Grey figures above each month: active participants with a full deposit at month end.</div>
+        </sc-if>
+
+        <sc-if value="{{showLine}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; justify-content: center"><svg width="860" height="330" viewBox="0 0 860 330" xmlns="http://www.w3.org/2000/svg" font-family="Montserrat, Helvetica Neue, sans-serif" role="img" aria-label="Machines in place and participants waiting, January to September 2026"><line x1="50" y1="290.0" x2="820" y2="290.0" stroke="#E3E7F0" stroke-width="1"></line><text x="38" y="295.0" font-size="14" fill="#5A6690" text-anchor="end">0</text><line x1="50" y1="201.3" x2="820" y2="201.3" stroke="#E3E7F0" stroke-width="1"></line><text x="38" y="206.3" font-size="14" fill="#5A6690" text-anchor="end">10</text><line x1="50" y1="112.7" x2="820" y2="112.7" stroke="#E3E7F0" stroke-width="1"></line><text x="38" y="117.7" font-size="14" fill="#5A6690" text-anchor="end">20</text><line x1="50" y1="24.0" x2="820" y2="24.0" stroke="#E3E7F0" stroke-width="1"></line><text x="38" y="29.0" font-size="14" fill="#5A6690" text-anchor="end">30</text><polyline points="50.0,130.4 146.2,121.5 242.5,94.9 338.8,94.9 435.0,77.2 531.2,77.2 627.5,86.1 723.8,77.2 820.0,77.2" fill="none" stroke="#1B2D71" stroke-width="4" stroke-linejoin="round"></polyline><circle cx="50.0" cy="130.4" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="50.0" y="116.4" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">18</text><circle cx="146.2" cy="121.5" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="146.2" y="107.5" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">19</text><circle cx="242.5" cy="94.9" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="242.5" y="80.9" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">22</text><circle cx="338.8" cy="94.9" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="338.8" y="80.9" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">22</text><circle cx="435.0" cy="77.2" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="435.0" y="63.2" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">24</text><circle cx="531.2" cy="77.2" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="531.2" y="63.2" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">24</text><circle cx="627.5" cy="86.1" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="627.5" y="72.1" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">23</text><circle cx="723.8" cy="77.2" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="723.8" y="63.2" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">24</text><circle cx="820.0" cy="77.2" r="6" fill="#FFFFFF" stroke="#1B2D71" stroke-width="3"></circle><text x="820.0" y="63.2" font-size="16" font-weight="700" fill="#1B2D71" text-anchor="middle">24</text><polyline points="50.0,174.7 146.2,174.7 242.5,183.6 338.8,174.7 435.0,210.2 531.2,210.2 627.5,192.5 723.8,210.2 820.0,219.1" fill="none" stroke="#3DAB2F" stroke-width="4" stroke-linejoin="round"></polyline><circle cx="50.0" cy="174.7" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="50.0" y="200.7" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">13</text><circle cx="146.2" cy="174.7" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="146.2" y="200.7" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">13</text><circle cx="242.5" cy="183.6" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="242.5" y="209.6" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">12</text><circle cx="338.8" cy="174.7" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="338.8" y="200.7" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">13</text><circle cx="435.0" cy="210.2" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="435.0" y="236.2" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">9</text><circle cx="531.2" cy="210.2" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="531.2" y="236.2" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">9</text><circle cx="627.5" cy="192.5" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="627.5" y="218.5" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">11</text><circle cx="723.8" cy="210.2" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="723.8" y="236.2" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">9</text><circle cx="820.0" cy="219.1" r="6" fill="#FFFFFF" stroke="#3DAB2F" stroke-width="3"></circle><text x="820.0" y="245.1" font-size="16" font-weight="700" fill="#2E7D23" text-anchor="middle">8</text><text x="50.0" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Jan</text><text x="146.2" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Feb</text><text x="242.5" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Mar</text><text x="338.8" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Apr</text><text x="435.0" y="320" font-size="15" fill="#5A6690" text-anchor="middle">May</text><text x="531.2" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Jun</text><text x="627.5" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Jul</text><text x="723.8" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Aug</text><text x="820.0" y="320" font-size="15" fill="#5A6690" text-anchor="middle">Sep</text></svg></div>
+        </sc-if>
+
+        <sc-if value="{{showDonut}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 56px; padding: 10px 0">
+            <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" font-family="Montserrat, Helvetica Neue, sans-serif" role="img" aria-label="Progress to the 50-machine target">
+              <circle cx="150" cy="150" r="120" fill="none" stroke="#EEF1F7" stroke-width="42"></circle>
+              <circle cx="150" cy="150" r="120" fill="none" stroke="#1B2D71" stroke-width="42" stroke-dasharray="{{dn.a}}" stroke-dashoffset="0" transform="rotate(-90 150 150)"></circle>
+              <circle cx="150" cy="150" r="120" fill="none" stroke="#3DAB2F" stroke-width="42" stroke-dasharray="{{dn.b}}" stroke-dashoffset="{{dn.bo}}" transform="rotate(-90 150 150)"></circle>
+              <text x="150" y="150" font-size="48" font-weight="800" fill="#1B2D71" text-anchor="middle">{{dn.center}}</text>
+              <text x="150" y="182" font-size="17" fill="#5A6690" text-anchor="middle">of 50 in Place</text>
+            </svg>
+            <div style="display: flex; flex-direction: column; gap: 18px">
+              <sc-for list="{{dn.rows}}" as="dr" hint-placeholder-count="3">
+                <div style="display: flex; align-items: center; gap: 14px">
+                  <div style="{{dr.sw}}"></div>
+                  <span style="font-size: 30px; font-weight: 800; color: #1B2D71; min-width: 44px">{{dr.n}}</span>
+                  <span style="font-size: 17px; color: #1B2D71">{{dr.label}}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{showPbars}}" hint-placeholder-val="{{ false }}">
+          <div style="height: 300px; display: flex; align-items: flex-end; gap: 40px; border-bottom: 1px solid #C9D2EE; padding: 0 24px">
+            <sc-for list="{{pbars}}" as="pb" hint-placeholder-count="4">
+              <div style="flex-grow: 1; flex-basis: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 8px; height: 100%">
+                <div style="{{pb.valueStyle}}">{{pb.value}}</div>
+                <div style="font-size: 15px; color: #5A6690">{{pb.n}}</div>
+                <div style="{{pb.barStyle}}"></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; gap: 40px; padding: 0 24px">
+            <sc-for list="{{pbars}}" as="pb" hint-placeholder-count="4">
+              <div style="{{pb.labelStyle}}">{{pb.label}}</div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{showHbars}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 10px; padding: 0 12px">
+            <sc-for list="{{hbars}}" as="hb" hint-placeholder-count="9">
+              <div style="display: grid; grid-template-columns: 110px 1fr 80px; align-items: center; gap: 14px">
+                <div style="font-size: 16px; font-weight: 600; color: #1B2D71">{{hb.label}}</div>
+                <div style="display: flex; height: 22px; border-radius: 4px; overflow: hidden">
+                  <div style="{{hb.tStyle}}"></div>
+                  <div style="{{hb.uStyle}}"></div>
+                </div>
+                <div style="font-size: 17px; font-weight: 800; color: #1B2D71; text-align: right">{{hb.pct}}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{showGauge}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding-top: 10px">
+            <svg width="380" height="220" viewBox="0 0 380 220" xmlns="http://www.w3.org/2000/svg" font-family="Montserrat, Helvetica Neue, sans-serif" role="img" aria-label="Share of active participants trained">
+              <circle cx="190" cy="190" r="150" fill="none" stroke="#EEF1F7" stroke-width="40" stroke-dasharray="471.2 942.5" transform="rotate(180 190 190)"></circle>
+              <circle cx="190" cy="190" r="150" fill="none" stroke="#1B2D71" stroke-width="40" stroke-dasharray="{{gauge.len}}" transform="rotate(180 190 190)"></circle>
+              <text x="190" y="170" font-size="52" font-weight="800" fill="#1B2D71" text-anchor="middle">{{gauge.pct}}</text>
+              <text x="190" y="205" font-size="17" fill="#5A6690" text-anchor="middle">Trained. Target 100%</text>
+            </svg>
+            <div style="font-size: 17px; color: #1B2D71">{{gauge.note}}</div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{showStrip}}" hint-placeholder-val="{{ false }}">
+          <div style="display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 10px; padding: 10px 0">
+            <sc-for list="{{strip}}" as="st" hint-placeholder-count="9">
+              <div style="background: #F5F7FB; border-radius: 10px; padding: 16px 8px; display: flex; flex-direction: column; align-items: center; gap: 12px; min-height: 170px">
+                <div style="font-size: 16px; font-weight: 700; color: #1B2D71">{{st.label}}</div>
+                <div style="display: flex; flex-direction: column; gap: 8px; align-items: center; flex-grow: 1">
+                  <div style="width: 30px; height: 30px; border-radius: 15px; background: #1B2D71"></div>
+                  <div style="{{st.oStyle}}"></div>
+                </div>
+                <div style="{{st.ocStyle}}">{{st.oc}}</div>
+                <div style="font-size: 14px; color: #5A6690; text-align: center">{{st.total}}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{showBullets}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 34px; padding: 20px 12px">
+            <sc-for list="{{bullets}}" as="bl" hint-placeholder-count="2">
+              <div style="display: flex; flex-direction: column; gap: 10px">
+                <div style="display: flex; justify-content: space-between; font-size: 18px; color: #1B2D71"><span style="font-weight: 700">{{bl.label}}</span><span><strong>{{bl.value}}</strong> of target {{bl.target}}</span></div>
+                <div style="position: relative; height: 34px; background: #EEF1F7; border-radius: 6px">
+                  <div style="{{bl.fill}}"></div>
+                  <div style="{{bl.mark}}"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{showDumbbell}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 30px; padding: 16px 12px">
+            <sc-for list="{{dumb}}" as="db" hint-placeholder-count="3">
+              <div style="display: flex; flex-direction: column; gap: 10px">
+                <div style="display: flex; justify-content: space-between; font-size: 18px; color: #1B2D71"><span style="font-weight: 700">{{db.label}}</span><span style="color: #5A6690">{{db.text}}</span></div>
+                <div style="position: relative; height: 30px">
+                  <div style="position: absolute; left: 0; right: 0; top: 14px; height: 2px; background: #EEF1F7"></div>
+                  <div style="{{db.line}}"></div>
+                  <div style="{{db.dotA}}"></div>
+                  <div style="{{db.dotB}}"></div>
+                </div>
+              </div>
+            </sc-for>
+            <div style="display: flex; justify-content: space-between; font-size: 14px; color: #5A6690"><span>0%</span><span>50%</span><span>100%</span></div>
+            <div style="font-size: 15px; color: #5A6690">February asked about negotiating and margins as one question (40%). September asked them separately.</div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{showObars}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 22px; padding: 16px 12px">
+            <sc-for list="{{obars}}" as="obr" hint-placeholder-count="5">
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <div style="display: flex; justify-content: space-between; font-size: 18px; color: #1B2D71"><span style="font-weight: 700">{{obr.label}}</span><span style="font-weight: 800">{{obr.text}}</span></div>
+                <div style="position: relative; height: 26px; background: #EEF1F7; border-radius: 5px">
+                  <div style="{{obr.fill}}"></div>
+                  <div style="position: absolute; top: -5px; bottom: -5px; left: 90%; width: 4px; background: #3DAB2F"></div>
+                </div>
+              </div>
+            </sc-for>
+            <div style="font-size: 15px; color: #5A6690">Green line: 90% target.</div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{showYoy}}" hint-placeholder-val="{{ false }}">
+          <div style="height: 300px; display: flex; align-items: flex-end; gap: 14px; border-bottom: 2px solid #1B2D71; padding: 0 12px">
+            <sc-for list="{{yoy}}" as="yy" hint-placeholder-count="9">
+              <div style="flex-grow: 1; flex-basis: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 6px">
+                <div style="{{yy.vStyle}}">{{yy.v}}</div>
+                <div style="display: flex; align-items: flex-end; gap: 4px; width: 100%; justify-content: center">
+                  <div style="{{yy.aStyle}}"></div>
+                  <div style="{{yy.bStyle}}"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; gap: 14px; padding: 0 12px">
+            <sc-for list="{{yoy}}" as="yy" hint-placeholder-count="9">
+              <div style="{{yy.lStyle}}">{{yy.label}}</div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{showLegend}}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; justify-content: center; gap: 24px; font-size: 15px; color: #1B2D71">
+            <sc-for list="{{legend}}" as="lg" hint-placeholder-count="3">
+              <div style="display: flex; align-items: center; gap: 8px"><div style="{{lg.sw}}"></div>{{lg.name}}</div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 24px">
+        <sc-if value="{{isAll}}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; flex-direction: column; gap: 16px">
+            <div style="font-size: 15px; font-weight: 800; letter-spacing: 1.6px; color: #1B2D71">KEY INSIGHTS</div>
+            <sc-for list="{{v.insights}}" as="ins" hint-placeholder-count="4">
+              <div style="border-left: 4px solid #3DAB2F; padding: 2px 0 2px 16px; font-size: 18px; line-height: 1.5; color: #1B2D71">{{ins}}</div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{monthOnly}}" hint-placeholder-val="{{ false }}">
+          <sc-for list="{{cards}}" as="cd" hint-placeholder-count="4">
+            <div style="background: #F5F7FB; border-radius: 14px; padding: 20px 26px; display: flex; flex-direction: column; gap: 8px">
+              <div style="{{cd.titleStyle}}">{{cd.title}}</div>
+              <sc-for list="{{cd.lines}}" as="ln" hint-placeholder-count="2">
+                <div style="font-size: 17px; line-height: 1.5; color: #1B2D71">{{ln}}</div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </sc-if>
+      </div>
+    </div>
+
+    <sc-if value="{{isAll}}" hint-placeholder-val="{{ true }}">
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) 400px; gap: 56px; align-items: start; padding-bottom: 8px">
+        <div style="display: flex; flex-direction: column; gap: 14px">
+          <div style="font-size: 15px; font-weight: 800; letter-spacing: 1.6px; color: #1B2D71">MONTH BY MONTH</div>
+          <div style="display: flex; flex-direction: column; border-top: 1px solid #E3E7F0">
+            <div style="{{thStyle}}">
+              <sc-for list="{{v.head}}" as="h" hint-placeholder-count="4"><div>{{h}}</div></sc-for>
+            </div>
+            <sc-for list="{{v.rows}}" as="r" hint-placeholder-count="9">
+              <div style="{{trStyle}}">
+                <sc-for list="{{r}}" as="cell" hint-placeholder-count="4"><div>{{cell}}</div></sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px">
+          <div style="font-size: 15px; font-weight: 800; letter-spacing: 1.6px; color: #1B2D71">SEPTEMBER IN DETAIL</div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px">
+            <sc-for list="{{cards}}" as="cd" hint-placeholder-count="4">
+              <div style="background: #F5F7FB; border-radius: 14px; padding: 22px 26px; display: flex; flex-direction: column; gap: 10px">
+                <div style="{{cd.titleStyle}}">{{cd.title}}</div>
+                <sc-for list="{{cd.lines}}" as="ln" hint-placeholder-count="3">
+                  <div style="font-size: 17px; line-height: 1.5; color: #1B2D71">{{ln}}</div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px">
+          <div style="font-size: 15px; font-weight: 800; letter-spacing: 1.6px; color: #2E7D23">WHAT WE RECOMMEND</div>
+          <div style="background: #F5F7FB; border-radius: 14px; padding: 24px 28px; display: flex; flex-direction: column; gap: 14px">
+            <sc-for list="{{v.recs}}" as="rc" hint-placeholder-count="4">
+              <div style="font-size: 17px; line-height: 1.5; color: #1B2D71">{{rc}}</div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{isOv}}" hint-placeholder-val="{{ true }}">
+    <div style="flex-grow: 1; padding: 32px 72px 0; display: flex; flex-direction: column; gap: 44px">
+      <h2 style="margin: 0; font-size: 42px; font-weight: 800; color: #1B2D71; line-height: 1.25; max-width: 1150px">{{ov.headline}}</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+        <sc-for list="{{ov.tiles}}" as="tl" hint-placeholder-count="8">
+          <div style="background: #EEF2F9; border-radius: 12px; padding: 28px 30px 22px; display: flex; flex-direction: column; gap: 10px">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+              <div style="font-size: 15px; font-weight: 800; letter-spacing: 1.6px; color: #1B2D71">{{tl.label}}</div>
+              <div style="{{tl.dot}}"></div>
+            </div>
+            <div style="font-size: 48px; font-weight: 800; color: #1B2D71; line-height: 1.05">{{tl.value}}</div>
+            <div style="font-size: 17px; color: #1B2D71; line-height: 1.45; flex-grow: 1">{{tl.sub}}</div>
+            <button type="button" onClick="{{tl.go}}" style="align-self: flex-start; min-height: 40px; padding: 0; border: none; background: transparent; color: #3DAB2F; font-size: 18px; font-weight: 800">Open →</button>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px">
+        <div style="border: 1px solid #E3E7F0; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+          <div style="font-size: 20px; font-weight: 800; color: #1B2D71; text-transform: uppercase; letter-spacing: 0.6px">Monthly Revenue, 2026</div>
+          <div style="position: relative; height: 270px; display: flex; gap: 10px; align-items: flex-start">
+            <sc-for list="{{ov.revBars}}" as="rb" hint-placeholder-count="9">
+              <div style="flex-grow: 1; flex-basis: 0; display: flex; flex-direction: column; align-items: center; height: 100%">
+                <div style="height: 210px; width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 3px">
+                  <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; width: 55%">
+                    <div style="font-size: 12px; font-weight: 700; color: #1B2D71">{{rb.rl}}</div>
+                    <div style="{{rb.rs}}"></div>
+                  </div>
+                  <div style="{{rb.ps}}"></div>
+                </div>
+                <div style="height: 2px; width: 100%; background: #1B2D71"></div>
+                <div style="height: 24px; width: 100%; display: flex; justify-content: flex-end; padding-right: 4px; box-sizing: border-box">
+                  <div style="{{rb.ns}}"></div>
+                </div>
+                <div style="font-size: 13px; color: #5A6690">{{rb.label}}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; gap: 20px; font-size: 14px; color: #1B2D71; flex-wrap: wrap">
+            <div style="display: flex; align-items: center; gap: 8px"><div style="width: 14px; height: 14px; border-radius: 3px; background: #1B2D71"></div>Revenue (Verified Sales)</div>
+            <div style="display: flex; align-items: center; gap: 8px"><div style="width: 14px; height: 14px; border-radius: 3px; background: #3DAB2F"></div>Net Profit Reported by Operators</div>
+          </div>
+          <div style="font-size: 14px; color: #5A6690">{{ov.profitNote}}</div>
+        </div>
+
+        <div style="border: 1px solid #E3E7F0; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+          <div style="font-size: 20px; font-weight: 800; color: #1B2D71; text-transform: uppercase; letter-spacing: 0.6px">Active Participants by Month</div>
+          <div style="height: 270px; display: flex; gap: 10px; align-items: flex-end; border-bottom: 2px solid #1B2D71">
+            <sc-for list="{{ov.partBars}}" as="pbx" hint-placeholder-count="9">
+              <div style="flex-grow: 1; flex-basis: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 4px">
+                <div style="font-size: 13px; font-weight: 700; color: #1B2D71">{{pbx.total}}</div>
+                <div style="width: 70%; display: flex; flex-direction: column">
+                  <div style="{{pbx.ws}}"></div>
+                  <div style="{{pbx.is}}"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; gap: 10px">
+            <sc-for list="{{ov.partBars}}" as="pbx" hint-placeholder-count="9">
+              <div style="flex-grow: 1; flex-basis: 0; text-align: center; font-size: 13px; color: #5A6690">{{pbx.label}}</div>
+            </sc-for>
+          </div>
+          <div style="display: flex; gap: 20px; font-size: 14px; color: #1B2D71">
+            <div style="display: flex; align-items: center; gap: 8px"><div style="width: 14px; height: 14px; border-radius: 3px; background: #1B2D71"></div>Machine in Place</div>
+            <div style="display: flex; align-items: center; gap: 8px"><div style="width: 14px; height: 14px; border-radius: 3px; box-sizing: border-box; background: #E7F5E4; border: 2px solid #3DAB2F"></div>Waiting for a Machine</div>
+          </div>
+          <div style="font-size: 14px; color: #5A6690">Participants With a Full Deposit, Month End</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px">
+        <div style="border-left: 6px solid #3DAB2F; background: #F5F7FB; border-radius: 0 14px 14px 0; padding: 22px 26px; display: flex; flex-direction: column; gap: 8px">
+          <div style="font-size: 15px; font-weight: 800; letter-spacing: 1px; color: #2E7D23">SUCCESS STORY</div>
+          <div style="font-size: 18px; line-height: 1.5; color: #1B2D71">Tsholofetso Manana has paid off her programme machine at Hatfield Studios and bought a second machine independently.</div>
+        </div>
+        <div style="border-left: 6px solid #0373B1; background: #F5F7FB; border-radius: 0 14px 14px 0; padding: 22px 26px; display: flex; flex-direction: column; gap: 8px">
+          <div style="font-size: 15px; font-weight: 800; letter-spacing: 1px; color: #0373B1">DEPLOYMENT PROGRESS</div>
+          <div style="font-size: 18px; line-height: 1.5; color: #1B2D71">A new machine went live at The Maslow Sandton in August. Three machines moved to student accommodation, and three new sites are being secured for participants waiting for machines.</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isKpi}}" hint-placeholder-val="{{ false }}">
+    <div style="flex-grow: 1; padding: 32px 72px 0; display: flex; flex-direction: column; gap: 32px">
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <h2 style="margin: 0; font-size: 42px; font-weight: 800; color: #1B2D71; line-height: 1.25; max-width: 1500px">KPI Dashboard: Progress Against 14 Programme KPIs, January to September 2026</h2>
+        <div style="font-size: 20px; color: #5A6690">{{kpiSummary}}</div>
+      </div>
+      <div style="background: #F2F3F7; border-radius: 12px; padding: 22px 32px; display: flex; gap: 48px; align-items: center">
+        <sc-for list="{{kpiChips}}" as="kc" hint-placeholder-count="4">
+          <div style="display: flex; align-items: center; gap: 10px"><span style="{{kc.dot}}"></span><span style="{{kc.textStyle}}">{{kc.n}} {{kc.label}}</span></div>
+        </sc-for>
+        <span style="margin-left: auto; font-size: 16px; color: #5A6690">Status as at September 2026</span>
+      </div>
+      <div style="display: flex; flex-direction: column">
+        <div style="display: grid; grid-template-columns: 90px 280px 90px repeat(9, minmax(0, 1fr)) 130px 300px; padding: 0 0 14px; border-bottom: 1px solid #D5DBE8; font-size: 16px; font-weight: 800; color: #1B2D71; align-items: end">
+          <div style="padding: 0 10px">KPI</div><div style="padding: 0 10px">Measure</div><div style="padding: 0 10px">Target</div>
+          <sc-for list="{{kpiMonths}}" as="mh" hint-placeholder-count="9"><div style="{{mh.style}}">{{mh.label}}</div></sc-for>
+          <div style="padding: 0 10px">Status</div><div style="padding: 0 10px">Comment</div>
+        </div>
+        <sc-for list="{{kpiRows}}" as="kr" hint-placeholder-count="14">
+          <div style="display: grid; grid-template-columns: 90px 280px 90px repeat(9, minmax(0, 1fr)) 130px 300px; padding: 14px 0; border-bottom: 1px solid #E3E7F0; font-size: 16px; color: #1B2D71; align-items: center; line-height: 1.35">
+            <div style="padding: 0 10px; font-weight: 800">{{kr.id}}</div>
+            <div style="padding: 0 10px">{{kr.measure}}</div>
+            <div style="padding: 0 10px">{{kr.target}}</div>
+            <sc-for list="{{kr.months}}" as="mv" hint-placeholder-count="9"><div style="{{mv.style}}">{{mv.v}}</div></sc-for>
+            <div style="padding: 0 10px; display: flex; align-items: center; gap: 8px"><span style="{{kr.dot}}"></span><span style="{{kr.statusStyle}}">{{kr.status}}</span></div>
+            <div style="padding: 0 10px; font-size: 15px; color: #1B2D71">{{kr.note}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="padding: 24px 72px 28px; font-size: 17px; font-style: italic; color: #5A6690">{{about}}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1920,"height":1600}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { m: 'all', tab: 'ov' };
+  }
+  renderVals() {
+    var self = this;
+    var ALLC = {"ov": {"idx": [0, 1, 2, 3, 4, 5, 6, 7, 8], "all": {}, "month": {}, "about": "Data to 28 September 2026. Sources: Enterprise Room, NAYAX sales records, operator surveys.", "headline": "Revenue Passes R1.5 Million and Placement Progresses; Recruitment, Training and Profitability Need Attention", "full": [31, 32, 34, 35, 33, 33, 34, 33, 31], "part": [2, 1, 2, 1, 2, 2, 2, 4, 4], "inp": [18, 19, 22, 22, 24, 24, 23, 24, 24], "wait": [13, 13, 12, 13, 9, 9, 11, 9, 7], "rev": [52843, 106531, 167981, 165612, 171912, 144560, 108621, 151320, 127920], "revCum": [425651, 532182, 700163, 865775, 1037687, 1182247, 1290868, 1442188, 1570108], "cov": [81.8, 81.8, 75.0, 75.0, 71.4, 71.4, 69.4, 67.6, 68.6], "net": [null, null, null, null, null, 33670, 1223, -1443, 15174], "prof": [null, null, null, null, null, "15 of 22", "4 of 12", "3 of 6", "8 of 16"], "exits": [5, 5, 5, 5, 7, 7, 7, 8, 10]}, "rec": {"tab": "Recruitment", "tabs": ["Overview", "Recruitment", "Machine placement", "Revenue", "Profitability", "Training", "KPI scorecard", "Outcomes"], "idx": [0, 1, 2, 3, 4, 5, 6, 7, 8], "about": "About this data: Enterprise Room deposit, refund and exit records. Full deposit is R12,000. Figures are month-end counts.", "kpis": [{"name": "KPI-01 Active Participants with a Full Deposit", "target": "50", "latest": "31 (62%)", "byMonth": ["31 (62%)", "32 (64%)", "34 (68%)", "35 (70%)", "33 (66%)", "33 (66%)", "34 (68%)", "33 (66%)", "31 (62%)"], "status": "Off track"}], "chart": {"allType": "diverge", "monthType": "waffle", "titleAll": "Joiners and Leavers by Month", "titleMonth": "50 Participant Places", "md": [{"a": 31, "b": 2}, {"a": 32, "b": 1}, {"a": 34, "b": 2}, {"a": 35, "b": 1}, {"a": 33, "b": 2}, {"a": 33, "b": 2}, {"a": 34, "b": 2}, {"a": 33, "b": 4}, {"a": 31, "b": 4}], "div": [{"j": 0, "l": 0, "t": 31}, {"j": 1, "l": 0, "t": 32}, {"j": 2, "l": 0, "t": 34}, {"j": 1, "l": 0, "t": 35}, {"j": 0, "l": 2, "t": 33}, {"j": 0, "l": 0, "t": 33}, {"j": 1, "l": 0, "t": 34}, {"j": 0, "l": 1, "t": 33}, {"j": 0, "l": 2, "t": 31}]}, "all": {"headline": "31 of the 50 Places Are Filled with a Full Deposit. The Deposit Is the Main Barrier to Growth.", "stats": [{"value": "31 of 50", "label": "Active Participants with a Full Deposit", "sub": "September 2026. 4 more paying in instalments"}, {"value": "45", "label": "People Who Have Paid a Deposit", "sub": "Since launch in 2024"}, {"value": "10 of 45", "label": "Withdrew After Paying a Deposit", "sub": "22% since launch"}], "insights": ["Full-deposit participants peaked at 35 in April and ended September at 31.", "5 new full deposits in 2026, against 5 exits. Growth has stalled.", "Instalment payers doubled from 2 to 4, showing demand among applicants who cannot pay at once.", "Every exit-survey respondent cited the R12,000 deposit. None cited communication or understanding of the programme."], "head": ["Month", "Full Deposit (% of 50)", "Instalments", "Joined", "Left"], "rows": [["January", "31 (62%)", "2", "0", "0"], ["February", "32 (64%)", "1", "1", "0"], ["March", "34 (68%)", "2", "2", "0"], ["April", "35 (70%)", "1", "1", "0"], ["May", "33 (66%)", "2", "0", "2"], ["June", "33 (66%)", "2", "0", "0"], ["July", "34 (68%)", "2", "1", "0"], ["August", "33 (66%)", "4", "0", "1"], ["September", "31 (62%)", "4", "0", "2"]], "recs": ["Offer a phased deposit plan that runs longer than four months, settled by installation.", "Run a planned intake to fill the 15 open places, with webinars at the points where applicants decide.", "Track instalment payers monthly and support them to completion.", "Adopt a 30-day inactivity trigger so operators get support before removal."]}, "month": {"0": {"headline": "31 of 50 Full-Deposit Places Filled (62%) at Baseline", "stats": [{"value": "31 of 50", "label": "Active Participants with a Full Deposit", "sub": "62% of the 50 places", "chg": "Baseline month", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "2", "label": "Paying in Instalments", "sub": "Deposit started, not yet R12,000", "chg": "Baseline month", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "+0 / -0", "label": "Joined / Left This Month", "sub": "Net change +0", "chg": "", "chgStyle": "display: none"}], "move": ["31 participants with a full deposit and 2 paying in instalments at the January baseline."], "cmp": ["Baseline month.", "62% of the 50 places filled with a full deposit."], "learn": ["Growth depends on converting approved applicants into paying participants."], "rec": ["Offer a phased deposit plan that runs longer than four months."]}, "1": {"headline": "32 of 50 Full-Deposit Places Filled (64%), Up 3.2% on January", "stats": [{"value": "32 of 50", "label": "Active Participants with a Full Deposit", "sub": "64% of the 50 places", "chg": "+1 (+3.2%) vs Jan", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "1", "label": "Paying in Instalments", "sub": "Deposit started, not yet R12,000", "chg": "-1 (-50.0%) vs Jan", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "+1 / -0", "label": "Joined / Left This Month", "sub": "Net change +1 (+3.2% of Jan)", "chg": "", "chgStyle": "display: none"}], "move": ["1 participant completed a deposit.", "No one left."], "cmp": ["32 with a full deposit, up 1 from January.", "64% of the 50 places filled. 1 more paying in instalments."], "learn": ["New deposits arrive one or two at a time, not in intakes."], "rec": ["Use webinars and live sessions at decision points to convert approved applicants."]}, "2": {"headline": "34 of 50 Full-Deposit Places Filled (68%), Up 6.2% on February", "stats": [{"value": "34 of 50", "label": "Active Participants with a Full Deposit", "sub": "68% of the 50 places", "chg": "+2 (+6.2%) vs Feb", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "2", "label": "Paying in Instalments", "sub": "Deposit started, not yet R12,000", "chg": "+1 (+100.0%) vs Feb", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "+2 / -0", "label": "Joined / Left This Month", "sub": "Net change +2 (+6.2% of Feb)", "chg": "", "chgStyle": "display: none"}], "move": ["2 participants completed deposits.", "1 new participant started paying in instalments."], "cmp": ["34 with a full deposit, up 2 from February.", "68% of the 50 places filled. 2 more paying in instalments."], "learn": ["Instalments help applicants who cannot pay R12,000 at once."], "rec": ["Track instalment payers monthly and support them to completion."]}, "3": {"headline": "35 of 50 Full-Deposit Places Filled (70%), Up 2.9% on March", "stats": [{"value": "35 of 50", "label": "Active Participants with a Full Deposit", "sub": "70% of the 50 places", "chg": "+1 (+2.9%) vs Mar", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "1", "label": "Paying in Instalments", "sub": "Deposit started, not yet R12,000", "chg": "-1 (-50.0%) vs Mar", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "+1 / -0", "label": "Joined / Left This Month", "sub": "Net change +1 (+2.9% of Mar)", "chg": "", "chgStyle": "display: none"}], "move": ["1 participant completed a deposit, reaching 35: the highest this year.", "No one left."], "cmp": ["35 with a full deposit, up 1 from March.", "70% of the 50 places filled. 1 more paying in instalments."], "learn": ["The programme peaked at 35 full deposits before two exits in May."], "rec": ["Fill the 14 open places with a planned intake, not ad hoc approvals."]}, "4": {"headline": "33 of 50 Full-Deposit Places Filled (66%), Down 5.7% on April", "stats": [{"value": "33 of 50", "label": "Active Participants with a Full Deposit", "sub": "66% of the 50 places", "chg": "-2 (-5.7%) vs Apr", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "2", "label": "Paying in Instalments", "sub": "Deposit started, not yet R12,000", "chg": "+1 (+100.0%) vs Apr", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "+0 / -2", "label": "Joined / Left This Month", "sub": "Net change -2 (-5.7% of Apr)", "chg": "", "chgStyle": "display: none"}], "move": ["2 participants left: 1 withdrew and was refunded, 1 was removed after a long inactive period.", "1 new participant started paying in instalments."], "cmp": ["33 with a full deposit, down 2 from April.", "66% of the 50 places filled. 2 more paying in instalments."], "learn": ["Long inactivity ends in removal; earlier action would protect places."], "rec": ["Adopt a 30-day inactivity trigger so struggling operators get support before removal."]}, "5": {"headline": "33 of 50 Full-Deposit Places Filled (66%), Unchanged on May", "stats": [{"value": "33 of 50", "label": "Active Participants with a Full Deposit", "sub": "66% of the 50 places", "chg": "No change vs May", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "2", "label": "Paying in Instalments", "sub": "Deposit started, not yet R12,000", "chg": "No change vs May", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "+0 / -0", "label": "Joined / Left This Month", "sub": "Net change +0 (+0.0% of May)", "chg": "", "chgStyle": "display: none"}], "move": ["No change: no deposits completed, no one left."], "cmp": ["33 with a full deposit, unchanged from May.", "66% of the 50 places filled. 2 more paying in instalments."], "learn": ["Momentum stalls in months with no engagement activity."], "rec": ["Schedule a participant engagement touchpoint every month."]}, "6": {"headline": "34 of 50 Full-Deposit Places Filled (68%), Up 3.0% on June", "stats": [{"value": "34 of 50", "label": "Active Participants with a Full Deposit", "sub": "68% of the 50 places", "chg": "+1 (+3.0%) vs Jun", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "2", "label": "Paying in Instalments", "sub": "Deposit started, not yet R12,000", "chg": "No change vs Jun", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "+1 / -0", "label": "Joined / Left This Month", "sub": "Net change +1 (+3.0% of Jun)", "chg": "", "chgStyle": "display: none"}], "move": ["1 participant completed a deposit.", "No one left."], "cmp": ["34 with a full deposit, up 1 from June.", "68% of the 50 places filled. 2 more paying in instalments."], "learn": ["Deposits still complete, but slowly."], "rec": ["Re-contact approved applicants who said they would join if payment terms allowed."]}, "7": {"headline": "33 of 50 Full-Deposit Places Filled (66%), Down 2.9% on July", "stats": [{"value": "33 of 50", "label": "Active Participants with a Full Deposit", "sub": "66% of the 50 places", "chg": "-1 (-2.9%) vs Jul", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "4", "label": "Paying in Instalments", "sub": "Deposit started, not yet R12,000", "chg": "+2 (+100.0%) vs Jul", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "+0 / -1", "label": "Joined / Left This Month", "sub": "Net change -1 (-2.9% of Jul)", "chg": "", "chgStyle": "display: none"}], "move": ["1 participant withdrew and was refunded.", "2 new participants started paying in instalments."], "cmp": ["33 with a full deposit, down 1 from July.", "66% of the 50 places filled. 4 more paying in instalments."], "learn": ["The deposit remains the main barrier: every exit-survey respondent cited it."], "rec": ["Introduce the longer phased deposit plan before the next intake."]}, "8": {"headline": "31 of 50 Full-Deposit Places Filled (62%), Down 6.1% on August", "stats": [{"value": "31 of 50", "label": "Active Participants with a Full Deposit", "sub": "62% of the 50 places", "chg": "-2 (-6.1%) vs Aug", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "4", "label": "Paying in Instalments", "sub": "Deposit started, not yet R12,000", "chg": "No change vs Aug", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "+0 / -2", "label": "Joined / Left This Month", "sub": "Net change -2 (-6.1% of Aug)", "chg": "", "chgStyle": "display: none"}], "move": ["2 participants withdrew: 1 was refunded and 1 has requested a refund.", "4 participants are now paying in instalments."], "cmp": ["31 with a full deposit, down 2 from August.", "62% of the 50 places filled. 4 more paying in instalments."], "learn": ["Withdrawals are steady: 10 of 45 depositors since launch (22%)."], "rec": ["Pair the longer deposit plan with a targeted intake to fill the 15 open places."]}}}, "pl": {"tab": "Machine placement", "tabs": ["Overview", "Recruitment", "Machine placement", "Revenue", "Profitability", "Training", "KPI scorecard", "Outcomes"], "idx": [0, 1, 2, 3, 4, 5, 6, 7, 8], "about": "About this data: Enterprise Room installation records and NAYAX sales. A machine is trading if it recorded sales in the period. Figures are month-end counts.", "kpis": [{"name": "KPI-03 Machines Installed and in Place", "target": "50", "latest": "24 (48%)", "byMonth": ["18 (36%)", "19 (38%)", "22 (44%)", "22 (44%)", "24 (48%)", "24 (48%)", "23 (46%)", "24 (48%)", "24 (48%)"], "status": "At risk"}, {"name": "KPI-04 Participants Waiting for a Machine", "target": "Fewer", "latest": "7", "byMonth": ["13", "13", "12", "13", "9", "9", "11", "9", "7"], "status": "At risk"}], "chart": {"allType": "line", "monthType": "donut", "titleAll": "Machines in Place Rise as Waiting List Falls", "titleMonth": "Progress to 50-Machine Target", "md": [{"a": 18, "b": 13}, {"a": 19, "b": 13}, {"a": 22, "b": 12}, {"a": 22, "b": 13}, {"a": 24, "b": 9}, {"a": 24, "b": 9}, {"a": 23, "b": 11}, {"a": 24, "b": 9}, {"a": 24, "b": 7}]}, "all": {"headline": "Machines in Place Rose from 18 to 24 in 2026, and the Waiting List Fell from 13 to 7.", "stats": [{"value": "24 of 50", "label": "Machines in Place", "sub": "September 2026, up from 18 in January"}, {"value": "7", "label": "Participants Waiting for a Machine", "sub": "Down from 13 in January"}, {"value": "9 / 3", "label": "Installed / Removed Since January", "sub": "Net gain of 6 machines"}], "insights": ["Placement came in bursts: three Sasko sites in March and three Eduvos campuses in May.", "77% of participants with a full deposit now have a machine.", "Student accommodation earns the most revenue, and three machines have moved to these sites.", "Three new sites are being secured for waiting participants, and the Future Life site is being handed to a new operator."], "head": ["Month", "In Place (% of 50)", "Waiting", "Installed / Removed", "Growth Rate"], "rows": [["January", "18 (36%)", "13", "2 / 0", "Baseline"], ["February", "19 (38%)", "13", "1 / 0", "+5.6%"], ["March", "22 (44%)", "12", "3 / 0", "+15.8%"], ["April", "22 (44%)", "13", "0 / 0", "+0.0%"], ["May", "24 (48%)", "9", "3 / 1", "+9.1%"], ["June", "24 (48%)", "9", "0 / 0", "+0.0%"], ["July", "23 (46%)", "11", "0 / 1", "-4.2%"], ["August", "24 (48%)", "9", "1 / 0", "+4.3%"], ["September", "24 (48%)", "7", "1 / 1", "+0.0%"]], "recs": ["Finalise the three allocated sites and redeploy the idle Future Life machine.", "Prioritise student accommodation and factory sites for every new placement.", "Let operators scout their own sites, with fast-tracked approval.", "Place any idle machine within 30 days of a site closing."]}, "month": {"0": {"headline": "18 of 50 Machines in Place (36%), with 13 Participants Waiting", "stats": [{"value": "18 of 50", "label": "Machines in Place", "sub": "36% of the 50-machine target", "chg": "Baseline month", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "13", "label": "Participants Waiting for a Machine", "sub": "42% of full-deposit participants", "chg": "Baseline month", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "Baseline", "label": "Placement Growth Rate", "sub": "2 installed in January", "chg": "", "chgStyle": "display: none"}], "move": ["2 machines installed: City Property head office and Future Life head office.", "18 machines in place at the January baseline."], "cmp": ["Baseline month: 18 machines in place, 36% of the 50-machine target.", "13 participants waiting."], "learn": ["Placement speed depends on securing suitable sites."], "rec": ["Secure a pipeline of sites before participants complete their deposits."]}, "1": {"headline": "19 of 50 Machines in Place (38%), Up 5.6%; Waiting List Unchanged at 13", "stats": [{"value": "19 of 50", "label": "Machines in Place", "sub": "38% of the 50-machine target", "chg": "+1 (+5.6%) vs Jan", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "13", "label": "Participants Waiting for a Machine", "sub": "41% of full-deposit participants", "chg": "No change vs Jan", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "+5.6%", "label": "Placement Growth Rate", "sub": "Machines in place vs January: 1 installed, 0 removed", "chg": "Growth of 1 machine", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}], "move": ["1 machine installed at Birchwood Hotel.", "One machine moved from Johannesburg CBD to Sasol Alrode, lifting its sales."], "cmp": ["19 machines in place, up 1 from January.", "13 participants waiting, against 13 in January.", "18 machines recorded sales in the period."], "learn": ["Relocating a weak site can lift sales quickly."], "rec": ["Review weak sites every quarter and relocate where sales stay low."]}, "2": {"headline": "22 of 50 Machines in Place (44%), Up 15.8%; Waiting List Down 8% to 12", "stats": [{"value": "22 of 50", "label": "Machines in Place", "sub": "44% of the 50-machine target", "chg": "+3 (+15.8%) vs Feb", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "12", "label": "Participants Waiting for a Machine", "sub": "35% of full-deposit participants", "chg": "-1 (-7.7%) vs Feb", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "+15.8%", "label": "Placement Growth Rate", "sub": "Machines in place vs February: 3 installed, 0 removed", "chg": "Growth of 3 machines", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}], "move": ["3 machines installed: Sasko Olifantsfontein, Sasko Aeroton and Sasko Epping."], "cmp": ["22 machines in place, up 3 from February.", "12 participants waiting, against 13 in February.", "19 machines recorded sales in the period."], "learn": ["Factory sites give steady daily traffic."], "rec": ["Prioritise factory and student accommodation sites for new placements."]}, "3": {"headline": "22 of 50 Machines in Place (44%), Unchanged; Waiting List Up 8% to 13", "stats": [{"value": "22 of 50", "label": "Machines in Place", "sub": "44% of the 50-machine target", "chg": "No change vs Mar", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "13", "label": "Participants Waiting for a Machine", "sub": "37% of full-deposit participants", "chg": "+1 (+8.3%) vs Mar", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "+0.0%", "label": "Placement Growth Rate", "sub": "Machines in place vs March: 0 installed, 0 removed", "chg": "No change in machines in place", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}], "move": ["No new installations.", "13 participants waiting for a machine."], "cmp": ["22 machines in place, unchanged from March.", "13 participants waiting, against 12 in March.", "21 machines recorded sales in the period."], "learn": ["Months without secured sites stall placement."], "rec": ["Let operators scout their own sites with a simple suitability checklist."]}, "4": {"headline": "24 of 50 Machines in Place (48%), Up 9.1%; Waiting List Down 31% to 9", "stats": [{"value": "24 of 50", "label": "Machines in Place", "sub": "48% of the 50-machine target", "chg": "+2 (+9.1%) vs Apr", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "9", "label": "Participants Waiting for a Machine", "sub": "27% of full-deposit participants", "chg": "-4 (-30.8%) vs Apr", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "+9.1%", "label": "Placement Growth Rate", "sub": "Machines in place vs April: 3 installed, 1 removed", "chg": "Growth of 2 machines", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}], "move": ["3 machines installed at Eduvos campuses in Cape Town.", "1 machine recovered after long inactivity."], "cmp": ["24 machines in place, up 2 from April.", "9 participants waiting, against 13 in April.", "24 machines recorded sales in the period."], "learn": ["Campus sites fill quickly but depend on the academic calendar."], "rec": ["Plan campus stock around term dates."]}, "5": {"headline": "24 of 50 Machines in Place (48%), Unchanged; Waiting List Unchanged at 9", "stats": [{"value": "24 of 50", "label": "Machines in Place", "sub": "48% of the 50-machine target", "chg": "No change vs May", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "9", "label": "Participants Waiting for a Machine", "sub": "27% of full-deposit participants", "chg": "No change vs May", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "+0.0%", "label": "Placement Growth Rate", "sub": "Machines in place vs May: 0 installed, 0 removed", "chg": "No change in machines in place", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}], "move": ["No new installations or removals."], "cmp": ["24 machines in place, unchanged from May.", "9 participants waiting, against 9 in May.", "24 machines recorded sales in the period."], "learn": ["The waiting list holds when no new sites are secured."], "rec": ["Fast-track approval of operator-identified sites."]}, "6": {"headline": "23 of 50 Machines in Place (46%), Down 4.2%; Waiting List Up 22% to 11", "stats": [{"value": "23 of 50", "label": "Machines in Place", "sub": "46% of the 50-machine target", "chg": "-1 (-4.2%) vs Jun", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "11", "label": "Participants Waiting for a Machine", "sub": "32% of full-deposit participants", "chg": "+2 (+22.2%) vs Jun", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "-4.2%", "label": "Placement Growth Rate", "sub": "Machines in place vs June: 0 installed, 1 removed", "chg": "Decline of 1 machine", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}], "move": ["1 machine uplifted to storage while its operator looks for a new site.", "No new installations."], "cmp": ["23 machines in place, down 1 from June.", "11 participants waiting, against 9 in June.", "24 machines recorded sales in the period."], "learn": ["An idle machine earns nothing until a new site is found."], "rec": ["Place idle machines within 30 days of a site closing."]}, "7": {"headline": "24 of 50 Machines in Place (48%), Up 4.3%; Waiting List Down 18% to 9", "stats": [{"value": "24 of 50", "label": "Machines in Place", "sub": "48% of the 50-machine target", "chg": "+1 (+4.3%) vs Jul", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "9", "label": "Participants Waiting for a Machine", "sub": "27% of full-deposit participants", "chg": "-2 (-18.2%) vs Jul", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "+4.3%", "label": "Placement Growth Rate", "sub": "Machines in place vs July: 1 installed, 0 removed", "chg": "Growth of 1 machine", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}], "move": ["1 machine installed at The Maslow Sandton."], "cmp": ["24 machines in place, up 1 from July.", "9 participants waiting, against 11 in July.", "23 machines recorded sales in the period."], "learn": ["Hotel sites add variety but earn less than student accommodation."], "rec": ["Favour student accommodation for the next placements."]}, "8": {"headline": "24 of 50 Machines in Place (48%), Unchanged; Waiting List Down 22% to 7", "stats": [{"value": "24 of 50", "label": "Machines in Place", "sub": "48% of the 50-machine target", "chg": "No change vs Aug", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "7", "label": "Participants Waiting for a Machine", "sub": "23% of full-deposit participants", "chg": "-2 (-22.2%) vs Aug", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "+0.0%", "label": "Placement Growth Rate", "sub": "Machines in place vs August: 1 installed, 1 removed", "chg": "No change in machines in place", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}], "move": ["1 machine placed at Respublica Roscommon House.", "1 machine moved to Respublica Hatfield Square.", "1 machine withdrawn with its operator."], "cmp": ["24 machines in place, unchanged from August.", "7 participants waiting, against 9 in August.", "24 machines recorded sales in the period."], "learn": ["Moving machines to student accommodation is the fastest way to lift sales."], "rec": ["Finalise the three allocated sites and redeploy the idle Future Life machine."]}}}, "rv": {"tab": "Revenue", "tabs": ["Overview", "Recruitment", "Machine placement", "Revenue", "Profitability", "Training", "KPI scorecard", "Outcomes"], "idx": [0, 1, 2, 3, 4, 5, 6, 7, 8], "kpis": [], "about": "About this data: verified sales from NAYAX records, by calendar month. September runs to 28 September.", "chart": {"allType": "yoy", "monthType": "yoy", "titleAll": "Monthly Revenue: 2026 vs 2025", "titleMonth": "Monthly Revenue: 2026 vs 2025", "yy": [{"a": 150.99, "b": 52843}, {"a": 1306, "b": 106531}, {"a": 6140, "b": 167981}, {"a": 5547.5, "b": 165612}, {"a": 9002, "b": 171912}, {"a": 16043, "b": 144560}, {"a": 22989, "b": 108621}, {"a": 32489, "b": 151320}, {"a": 57056.98, "b": 127920}]}, "all": {"headline": "Revenue to Date Passed R1.5 Million. 2026 Has Already Earned 3.2 Times the Whole of 2025.", "stats": [{"value": "R1.57m", "label": "Revenue to Date", "sub": "Verified sales, January 2025 to September 2026"}, {"value": "R1.20m", "label": "Revenue in 2026", "sub": "January to September, against R373k in all of 2025"}, {"value": "R171,912", "label": "Best Month", "sub": "May 2026"}], "insights": ["Every month of 2026 earned more than the same month in 2025.", "Revenue follows the academic calendar: highest in March to May, lowest in July.", "Student accommodation earns 60% of revenue in the latest period.", "Three sites earn 55% of revenue, so the programme depends on a few strong machines."], "head": ["Month", "Revenue", "Month on Month", "Per Machine"], "rows": [["January", "R52,843", "Baseline", "R2,936"], ["February", "R106,531", "+101.6%", "R5,607"], ["March", "R167,981", "+57.7%", "R7,636"], ["April", "R165,612", "-1.4%", "R7,528"], ["May", "R171,912", "+3.8%", "R7,163"], ["June", "R144,560", "-15.9%", "R6,023"], ["July", "R108,621", "-24.9%", "R4,723"], ["August", "R151,320", "+39.3%", "R6,305"], ["September", "R127,920", "-15.5%", "R5,330"]], "recs": ["Prioritise student accommodation and factory sites for new and relocated machines.", "Plan stock and cash around university breaks.", "Lift weaker campus and office sites to reduce reliance on the top three.", "Resolve the PEPSICO stock discount so more of this revenue becomes profit."]}, "month": {"0": {"headline": "R53k Revenue in January, 4% of the Nine-Month Total", "stats": [{"value": "R53k", "label": "Revenue This Month", "sub": "R52,843, January 2026", "chg": "Baseline month", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "R0.43m", "label": "Revenue to Date", "sub": "Since January 2025", "chg": "+R52,843 this month (+14.2%)", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R2,936", "label": "Revenue per Machine", "sub": "18 machines in place", "chg": "Baseline month", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}], "moveTitle": "WHAT CHANGED THIS MONTH", "move": ["R52,843 in verified sales."], "cmp": ["Up from R151 in January 2025, when the programme was starting."], "learn": ["January is slow: host sites reopen after the holidays."], "rec": ["Restock early in January so machines are full when sites reopen."]}, "1": {"headline": "R107k Revenue in February, Up 101.6% on January", "stats": [{"value": "R107k", "label": "Revenue This Month", "sub": "R106,531, February 2026", "chg": "+R53,688 (+101.6%) vs Jan", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R0.53m", "label": "Revenue to Date", "sub": "Since January 2025", "chg": "+R106,531 this month (+25.0%)", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R5,607", "label": "Revenue per Machine", "sub": "19 machines in place", "chg": "+R2,671 (+91.0%) vs Jan", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}], "moveTitle": "WHAT CHANGED THIS MONTH", "move": ["R106,531 in verified sales. Up R53,688 from January."], "cmp": ["Up from R1,306 in February 2025, when the programme was starting."], "learn": ["Revenue doubled as campuses and offices returned."], "rec": ["Keep campus machines fully stocked during term."]}, "2": {"headline": "R168k Revenue in March, Up 57.7% on February", "stats": [{"value": "R168k", "label": "Revenue This Month", "sub": "R167,981, March 2026", "chg": "+R61,450 (+57.7%) vs Feb", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R0.70m", "label": "Revenue to Date", "sub": "Since January 2025", "chg": "+R167,981 this month (+31.6%)", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R7,636", "label": "Revenue per Machine", "sub": "22 machines in place", "chg": "+R2,029 (+36.2%) vs Feb", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}], "moveTitle": "WHAT CHANGED THIS MONTH", "move": ["R167,981 in verified sales. Up R61,450 from February."], "cmp": ["Up from R6,140 in March 2025, when the programme was starting."], "learn": ["Three new factory sites lifted revenue to a record."], "rec": ["Look for more factory sites: they trade steadily every day."]}, "3": {"headline": "R166k Revenue in April, Down 1.4% on March", "stats": [{"value": "R166k", "label": "Revenue This Month", "sub": "R165,612, April 2026", "chg": "-R2,369 (-1.4%) vs Mar", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "R0.87m", "label": "Revenue to Date", "sub": "Since January 2025", "chg": "+R165,612 this month (+23.7%)", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R7,528", "label": "Revenue per Machine", "sub": "22 machines in place", "chg": "-R108 (-1.4%) vs Mar", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}], "moveTitle": "WHAT CHANGED THIS MONTH", "move": ["R165,612 in verified sales. Down R2,369 from March."], "cmp": ["Up from R5,548 in April 2025, when the programme was starting."], "learn": ["Revenue held near record levels."], "rec": ["Use strong months to build stock and cash buffers."]}, "4": {"headline": "R172k Revenue in May, Up 3.8% on April", "stats": [{"value": "R172k", "label": "Revenue This Month", "sub": "R171,912, May 2026", "chg": "+R6,300 (+3.8%) vs Apr", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R1.04m", "label": "Revenue to Date", "sub": "Since January 2025", "chg": "+R171,912 this month (+19.9%)", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R7,163", "label": "Revenue per Machine", "sub": "24 machines in place", "chg": "-R365 (-4.8%) vs Apr", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}], "moveTitle": "WHAT CHANGED THIS MONTH", "move": ["R171,912 in verified sales. Up R6,300 from April."], "cmp": ["19 times May 2025 (R9,002)."], "learn": ["May was the best month: every site type was trading."], "rec": ["Study May as the benchmark month for every site."]}, "5": {"headline": "R145k Revenue in June, Down 15.9% on May", "stats": [{"value": "R145k", "label": "Revenue This Month", "sub": "R144,560, June 2026", "chg": "-R27,352 (-15.9%) vs May", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "R1.18m", "label": "Revenue to Date", "sub": "Since January 2025", "chg": "+R144,560 this month (+13.9%)", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R6,023", "label": "Revenue per Machine", "sub": "24 machines in place", "chg": "-R1,140 (-15.9%) vs May", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}], "moveTitle": "WHAT CHANGED THIS MONTH", "move": ["R144,560 in verified sales. Down R27,352 from May."], "cmp": ["9 times June 2025 (R16,043)."], "learn": ["Revenue eased as campuses entered exams and closed."], "rec": ["Reduce stock at campus sites before exams end."]}, "6": {"headline": "R109k Revenue in July, Down 24.9% on June", "stats": [{"value": "R109k", "label": "Revenue This Month", "sub": "R108,621, July 2026", "chg": "-R35,939 (-24.9%) vs Jun", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "R1.29m", "label": "Revenue to Date", "sub": "Since January 2025", "chg": "+R108,621 this month (+9.2%)", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R4,723", "label": "Revenue per Machine", "sub": "23 machines in place", "chg": "-R1,300 (-21.6%) vs Jun", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}], "moveTitle": "WHAT CHANGED THIS MONTH", "move": ["R108,621 in verified sales. Down R35,939 from June."], "cmp": ["5 times July 2025 (R22,989)."], "learn": ["July is the seasonal low: student sites empty over the winter break."], "rec": ["Plan stock and cash for the July break at student sites."]}, "7": {"headline": "R151k Revenue in August, Up 39.3% on July", "stats": [{"value": "R151k", "label": "Revenue This Month", "sub": "R151,320, August 2026", "chg": "+R42,699 (+39.3%) vs Jul", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R1.44m", "label": "Revenue to Date", "sub": "Since January 2025", "chg": "+R151,320 this month (+11.7%)", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R6,305", "label": "Revenue per Machine", "sub": "24 machines in place", "chg": "+R1,582 (+33.5%) vs Jul", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}], "moveTitle": "WHAT CHANGED THIS MONTH", "move": ["R151,320 in verified sales. Up R42,699 from July."], "cmp": ["5 times August 2025 (R32,489)."], "learn": ["Revenue recovered strongly when students returned."], "rec": ["Restock student sites before the return date."]}, "8": {"headline": "R128k Revenue in September, Down 15.5% on August", "stats": [{"value": "R128k", "label": "Revenue This Month", "sub": "R127,920, September 2026", "chg": "-R23,400 (-15.5%) vs Aug", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "R1.57m", "label": "Revenue to Date", "sub": "Since January 2025", "chg": "+R127,920 this month (+8.9%)", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R5,330", "label": "Revenue per Machine", "sub": "24 machines in place", "chg": "-R975 (-15.5%) vs Aug", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}], "moveTitle": "WHAT CHANGED THIS MONTH", "move": ["R127,920 in verified sales. Down R23,400 from August."], "cmp": ["2 times September 2025 (R57,057)."], "learn": ["Revenue held steady, with student accommodation leading."], "rec": ["Prioritise student accommodation for new and relocated machines."]}}}, "pr": {"tab": "Profitability", "tabs": ["Overview", "Recruitment", "Machine placement", "Revenue", "Profitability", "Training", "KPI scorecard", "Outcomes"], "idx": [5, 6, 7, 8], "about": "About this data: self-reported in the monthly operator survey, which started in June 2026. Operators without a machine at a site are excluded. Typical result is the median.", "kpis": [{"name": "KPI-08 Operators Reporting a Profit", "target": "100%", "latest": "50%", "byMonth": ["", "", "", "", "", "68%", "33%", "50%", "50%"], "status": "Off track"}], "chart": {"allType": "pbars", "monthType": "pbars", "titleAll": "Respondents in Profit by Month", "titleMonth": "Respondents in Profit by Month", "pb": [{"i": 5, "pct": 68, "n": "15 of 22"}, {"i": 6, "pct": 33, "n": "4 of 12"}, {"i": 7, "pct": 50, "n": "3 of 6"}, {"i": 8, "pct": 50, "n": "8 of 16"}]}, "all": {"headline": "Across June to September, Just Over Half of Responding Operators Reported a Profit.", "stats": [{"value": "30 of 56", "label": "Responses Reporting a Profit", "sub": "54% across the four months"}, {"value": "R235", "label": "Typical Profit/Loss Result", "sub": "Median of all 56 responses"}, {"value": "R4,000", "label": "Most Profitable Site Type", "sub": "Student accommodation: typical profit across 11 responses"}], "insights": ["Profitability follows revenue: lowest in July, when student sites emptied over the winter break, and back to half by September.", "Responses fell to 6 in August and recovered to 16 in September, so August is the least reliable month.", "Profit is concentrated: in September two operators account for 61% of all reported profit.", "Student accommodation is the most profitable site type: typical profit of R4,000 across 11 responses, against a typical loss of R1,500 at tertiary campuses."], "head": ["Month", "Responded", "In Profit", "Typical Profit/Loss"], "rows": [["June", "22 of 24", "15 (68%)", "R410"], ["July", "12 of 24", "4 (33%)", "-R382"], ["August", "6 of 24", "3 (50%)", "-R296"], ["September", "16 of 24", "8 (50%)", "R168"]], "recs": ["Place new and relocated machines at student accommodation and factory sites, where operators are most often profitable.", "Help operators build cash buffers before university breaks, when student sites go quiet.", "Keep monthly survey response above 60% with personal follow-up, so results can be trusted.", "Resolve the PEPSICO stock discount: margin, not demand, limits most operators."]}, "month": {"5": {"headline": "68% of Respondents in Profit (15 of 22) in the First Survey Month", "moveTitle": "WHO MADE THE MOST PROFIT", "stats": [{"value": "15 of 22", "label": "Operators in Profit", "sub": "68% of respondents; 22 of 24 responded (92%)", "chg": "First survey month", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "R410", "label": "Typical Profit/Loss Result", "sub": "Median profit or loss, June", "chg": "First survey month", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "R8,000", "label": "Most Profitable Site Type", "sub": "Student accommodation: typical profit, 3 responses", "chg": "", "chgStyle": "display: none"}], "move": ["Tsholofetso Manana, Hatfield Studios: R16,798", "Joseph Swakamisa, Arteria Parktown: R8,000", "Nosicelo Mlunguza, Peak Studios: R4,000"], "cmp": ["First month of the survey: 15 of 22 in profit, typical profit R410.", "The top three earned 69% of all reported profit.", "All three student accommodation operators were in profit."], "learn": ["Site type drives profit: student accommodation leads by a wide margin.", "Corporate office sites cover costs but earn little (typical profit R90)."], "rec": ["Prioritise student accommodation sites for new and relocated machines.", "Review pricing and stock at low-earning corporate sites."]}, "6": {"headline": "33% of Respondents in Profit (4 of 12), Down 35 pts on June", "moveTitle": "WHO MADE THE MOST PROFIT", "stats": [{"value": "4 of 12", "label": "Operators in Profit", "sub": "33% of respondents; 12 of 24 responded (50%)", "chg": "-35 pts vs Jun (15 of 22)", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "-R382", "label": "Typical Profit/Loss Result", "sub": "Median profit or loss, July", "chg": "-R792 vs Jun", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "R218", "label": "Most Profitable Site Type", "sub": "Hospitality: typical profit, 2 responses", "chg": "", "chgStyle": "display: none"}], "move": ["Joseph Swakamisa, Arteria Parktown: R8,000", "Aphelele Mapuko, Sasko Epping: R3,535", "Obakeng Thage, City Property: R900"], "cmp": ["Share in profit fell from 68% in June to 33%.", "Typical result moved from a R410 profit to a R382 loss.", "Hatfield Studios swung to a R6,034 loss over the winter break."], "learn": ["Student sites are seasonal: revenue drops when universities close.", "Fixed costs, including the R877 monthly rental, continue in quiet months."], "rec": ["Help operators build a cash buffer before university breaks.", "Reduce stock orders ahead of known quiet periods."]}, "7": {"headline": "50% of Respondents in Profit (3 of 6), Up 17 pts on July", "moveTitle": "WHO MADE THE MOST PROFIT", "stats": [{"value": "3 of 6", "label": "Operators in Profit", "sub": "50% of respondents; 6 of 24 responded (25%)", "chg": "+17 pts vs Jul (4 of 12)", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "-R296", "label": "Typical Profit/Loss Result", "sub": "Median profit or loss, August", "chg": "+R86 vs Jul", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R3,000", "label": "Most Profitable Site Type", "sub": "Student accommodation: typical profit, 1 response", "chg": "", "chgStyle": "display: none"}], "move": ["Tsholofetso Manana, Hatfield Studios: R3,000", "Zinhle Ngcobo, The Maslow Sandton: R450 in her first month", "Obakeng Thage, City Property: R300"], "cmp": ["3 of 6 respondents in profit, but only 6 of 24 operators responded.", "Revenue recovered strongly after the July low."], "learn": ["Survey response collapses without active follow-up.", "Too few responses to judge the cohort this month."], "rec": ["Make the monthly profit return a standard operator commitment.", "Follow up personally with operators who have not responded."]}, "8": {"headline": "50% of Respondents in Profit (8 of 16), Unchanged on August, From a 67% Response Rate", "moveTitle": "WHO MADE THE MOST PROFIT", "stats": [{"value": "8 of 16", "label": "Operators in Profit", "sub": "50% of respondents; 16 of 24 responded (67%)", "chg": "No change vs Aug (3 of 6)", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "R168", "label": "Typical Profit/Loss Result", "sub": "Median profit or loss, September", "chg": "+R464 vs Aug", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "R4,955", "label": "Most Profitable Site Type", "sub": "Student accommodation: typical profit, 4 responses", "chg": "", "chgStyle": "display: none"}], "move": ["Joseph Swakamisa, Arteria Parktown: R8,000", "Tsholofetso Manana, Hatfield Studios: R6,910", "Nosicelo Mlunguza, Peak Studios: R3,000"], "cmp": ["8 of 16 in profit, the same share as August but from far more responses.", "Typical result: R168 profit, up from a R296 loss.", "Factory sites: 4 of 5 in profit. Campuses: 1 of 4."], "learn": ["The top three are all student accommodation sites.", "Two operators earn 61% of all reported profit.", "Transaction fees, debits and rental can absorb most of a small site's revenue."], "rec": ["Place new and relocated machines at student accommodation and factory sites.", "Give campus operators pricing and stock support.", "Resolve the PEPSICO stock discount to lift margins for all operators."]}}}, "tr": {"tab": "Training", "tabs": ["Overview", "Recruitment", "Machine placement", "Revenue", "Profitability", "Training", "KPI scorecard", "Outcomes"], "idx": [0, 1, 2, 3, 4, 5, 6, 7, 8], "about": "About this data: trained means a participant completed both modules, a full-day session and an onboarding session. No training has run since January 2026. Active includes participants paying in instalments.", "kpis": [{"name": "KPI-02 Participants Who Completed Training", "target": "100%", "latest": "68.6%", "byMonth": ["81.8%", "81.8%", "75.0%", "75.0%", "71.4%", "71.4%", "69.4%", "67.6%", "68.6%"], "status": "Off track"}, {"name": "KPI-06 Participants Who Attended a Full-Day Session", "target": "100%", "latest": "68.6%", "byMonth": ["81.8%", "81.8%", "75.0%", "75.0%", "71.4%", "71.4%", "69.4%", "67.6%", "68.6%"], "status": "Off track"}], "chart": {"allType": "hbars", "monthType": "gauge", "titleAll": "Trained vs Untrained Participants", "titleMonth": "Training Coverage", "tr": [{"t": 27, "u": 6, "c": 81.8}, {"t": 27, "u": 6, "c": 81.8}, {"t": 27, "u": 9, "c": 75.0}, {"t": 27, "u": 9, "c": 75.0}, {"t": 25, "u": 10, "c": 71.4}, {"t": 25, "u": 10, "c": 71.4}, {"t": 25, "u": 11, "c": 69.4}, {"t": 25, "u": 12, "c": 67.6}, {"t": 24, "u": 11, "c": 68.6}]}, "all": {"headline": "Training Coverage Fell from 82% to 69% in 2026, Because No Training Has Run Since January.", "stats": [{"value": "24 of 35", "label": "Active Participants Trained", "sub": "September 2026: 68.6%"}, {"value": "11", "label": "Active Participants Not Yet Trained", "sub": "Up from 6 in January"}, {"value": "78.6%", "label": "Rated Training Positively", "sub": "February 2026, target 90%. Not re-measured"}], "insights": ["No training has run since January, so every new participant joins untrained.", "The untrained group almost doubled, from 6 to 11 participants.", "Three trained participants left the programme, two in May and one in September.", "Training satisfaction was 78.6% at baseline, below the 90% target, and cannot be re-measured until training resumes."], "head": ["Month", "Trained", "Untrained (% of Active)", "Coverage"], "rows": [["January", "27", "6 (18%)", "81.8%"], ["February", "27", "6 (18%)", "81.8%"], ["March", "27", "9 (25%)", "75.0%"], ["April", "27", "9 (25%)", "75.0%"], ["May", "25", "10 (29%)", "71.4%"], ["June", "25", "10 (29%)", "71.4%"], ["July", "25", "11 (31%)", "69.4%"], ["August", "25", "12 (32%)", "67.6%"], ["September", "24", "11 (31%)", "68.6%"]], "recs": ["Run a full-day and onboarding session for the 11 untrained participants before the next placements.", "Make completed training a condition of machine placement.", "Use top-performing operators as peer trainers to keep sessions affordable.", "Re-measure training satisfaction after the next session."]}, "month": {"0": {"headline": "81.8% of Active Participants Trained (27 of 33) at Baseline", "stats": [{"value": "27 of 33", "label": "Active Participants Trained", "sub": "81.8% coverage", "chg": "Baseline month", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "6", "label": "Active Participants Not Yet Trained", "sub": "18% of active participants", "chg": "Baseline month", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "0.0 pts", "label": "Change Since January", "sub": "Coverage was 81.8% in January", "chg": "", "chgStyle": "display: none"}], "move": ["27 of 33 active participants trained at the January baseline."], "cmp": ["Baseline month: 81.8% trained.", "6 untrained participants, against 6 in January."], "learn": ["Most of the original cohort is trained; new joiners are not."], "rec": ["Schedule training for 2026 joiners before they receive machines."]}, "1": {"headline": "81.8% of Active Participants Trained (27 of 33), Unchanged on January", "stats": [{"value": "27 of 33", "label": "Active Participants Trained", "sub": "81.8% coverage", "chg": "No change vs Jan", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "6", "label": "Active Participants Not Yet Trained", "sub": "18% of active participants", "chg": "No change vs Jan", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "0.0 pts", "label": "Change Since January", "sub": "Coverage was 81.8% in January", "chg": "", "chgStyle": "display: none"}], "move": ["1 participant moved from instalments to a full deposit; no change in training."], "cmp": ["81.8% trained, against 81.8% in January.", "6 untrained participants, against 6 in January."], "learn": ["Without new sessions, every new joiner widens the gap."], "rec": ["Book the next full-day session now so new joiners are covered."]}, "2": {"headline": "75.0% of Active Participants Trained (27 of 36), Down 6.8 pts on February", "stats": [{"value": "27 of 36", "label": "Active Participants Trained", "sub": "75.0% coverage", "chg": "-6.8 pts vs Feb", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "9", "label": "Active Participants Not Yet Trained", "sub": "25% of active participants", "chg": "+3 (+50.0%) vs Feb", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "-6.8 pts", "label": "Change Since January", "sub": "Coverage was 81.8% in January", "chg": "", "chgStyle": "display: none"}], "move": ["3 more participants became active without training."], "cmp": ["75.0% trained, against 81.8% in February.", "9 untrained participants, against 6 in January."], "learn": ["Growth in participants is outpacing training."], "rec": ["Make training a condition of machine placement."]}, "3": {"headline": "75.0% of Active Participants Trained (27 of 36), Unchanged on March", "stats": [{"value": "27 of 36", "label": "Active Participants Trained", "sub": "75.0% coverage", "chg": "No change vs Mar", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "9", "label": "Active Participants Not Yet Trained", "sub": "25% of active participants", "chg": "No change vs Mar", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "-6.8 pts", "label": "Change Since January", "sub": "Coverage was 81.8% in January", "chg": "", "chgStyle": "display: none"}], "move": ["No training held. Coverage unchanged at 75%."], "cmp": ["75.0% trained, against 75.0% in March.", "9 untrained participants, against 6 in January."], "learn": ["Months without training let the untrained group build up."], "rec": ["Run a short virtual session to start closing the gap."]}, "4": {"headline": "71.4% of Active Participants Trained (25 of 35), Down 3.6 pts on April", "stats": [{"value": "25 of 35", "label": "Active Participants Trained", "sub": "71.4% coverage", "chg": "-3.6 pts vs Apr", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "10", "label": "Active Participants Not Yet Trained", "sub": "29% of active participants", "chg": "+1 (+11.1%) vs Apr", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "-10.4 pts", "label": "Change Since January", "sub": "Coverage was 81.8% in January", "chg": "", "chgStyle": "display: none"}], "move": ["2 trained participants left the programme."], "cmp": ["71.4% trained, against 75.0% in April.", "10 untrained participants, against 6 in January."], "learn": ["Losing trained operators lowers coverage twice: fewer trained, same untrained."], "rec": ["Use top operators as peer trainers to cover gaps quickly."]}, "5": {"headline": "71.4% of Active Participants Trained (25 of 35), Unchanged on May", "stats": [{"value": "25 of 35", "label": "Active Participants Trained", "sub": "71.4% coverage", "chg": "No change vs May", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "10", "label": "Active Participants Not Yet Trained", "sub": "29% of active participants", "chg": "No change vs May", "chgStyle": "font-size: 17px; font-weight: 700; color: #5A6690"}, {"value": "-10.4 pts", "label": "Change Since January", "sub": "Coverage was 81.8% in January", "chg": "", "chgStyle": "display: none"}], "move": ["No training held. Coverage unchanged."], "cmp": ["71.4% trained, against 71.4% in May.", "10 untrained participants, against 6 in January."], "learn": ["The untrained group now includes operators waiting for machines."], "rec": ["Train waiting participants while sites are being secured."]}, "6": {"headline": "69.4% of Active Participants Trained (25 of 36), Down 2.0 pts on June", "stats": [{"value": "25 of 36", "label": "Active Participants Trained", "sub": "69.4% coverage", "chg": "-2.0 pts vs Jun", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "11", "label": "Active Participants Not Yet Trained", "sub": "31% of active participants", "chg": "+1 (+10.0%) vs Jun", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "-12.4 pts", "label": "Change Since January", "sub": "Coverage was 81.8% in January", "chg": "", "chgStyle": "display: none"}], "move": ["1 more participant became active without training."], "cmp": ["69.4% trained, against 71.4% in June.", "11 untrained participants, against 6 in January."], "learn": ["Untrained participants could receive machines without preparation."], "rec": ["Check training status before every installation."]}, "7": {"headline": "67.6% of Active Participants Trained (25 of 37), Down 1.8 pts on July", "stats": [{"value": "25 of 37", "label": "Active Participants Trained", "sub": "67.6% coverage", "chg": "-1.8 pts vs Jul", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "12", "label": "Active Participants Not Yet Trained", "sub": "32% of active participants", "chg": "+1 (+9.1%) vs Jul", "chgStyle": "font-size: 17px; font-weight: 700; color: #B00000"}, {"value": "-14.2 pts", "label": "Change Since January", "sub": "Coverage was 81.8% in January", "chg": "", "chgStyle": "display: none"}], "move": ["2 new participants started paying instalments without training."], "cmp": ["67.6% trained, against 69.4% in July.", "12 untrained participants, against 6 in January."], "learn": ["Instalment payers are joining with no training plan."], "rec": ["Add instalment payers to the next training intake."]}, "8": {"headline": "68.6% of Active Participants Trained (24 of 35), Up 1.0 pts on August", "stats": [{"value": "24 of 35", "label": "Active Participants Trained", "sub": "68.6% coverage", "chg": "+1.0 pts vs Aug", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "11", "label": "Active Participants Not Yet Trained", "sub": "31% of active participants", "chg": "-1 (-8.3%) vs Aug", "chgStyle": "font-size: 17px; font-weight: 700; color: #1E6B17"}, {"value": "-13.2 pts", "label": "Change Since January", "sub": "Coverage was 81.8% in January", "chg": "", "chgStyle": "display: none"}], "move": ["1 trained participant left; 1 untrained participant withdrew."], "cmp": ["68.6% trained, against 67.6% in August.", "11 untrained participants, against 6 in January."], "learn": ["11 active participants have not been trained, about one in three."], "rec": ["Run a full-day and onboarding session for the 11 untrained participants, then re-measure satisfaction."]}}}, "kpi": {"idx": [], "all": {}, "month": {}, "rows": [["KPI-01", "Active Participants with a Full Deposit", "50", "31", "31", "Off track", "31 of 50 places filled; 4 more paying in instalments", ["31", "32", "34", "35", "33", "33", "34", "33", "31"]], ["KPI-02", "Participants Who Completed Training", "100%", "81.8%", "68.6%", "Off track", "No training since January; 24 of 35 active participants trained", ["81.8%", "81.8%", "75.0%", "75.0%", "71.4%", "71.4%", "69.4%", "67.6%", "68.6%"]], ["KPI-03", "Machines Installed and in Place", "50", "18", "24", "At risk", "Up 6 since January; 77% of full-deposit participants have a machine", ["18", "19", "22", "22", "24", "24", "23", "24", "24"]], ["KPI-04", "Participants Waiting for a Machine", "Fewer", "13", "7", "At risk", "Down 6 since January; 3 new sites being secured", ["13", "13", "12", "13", "9", "9", "11", "9", "7"]], ["KPI-05", "Partner Alignment Sessions Held", "50", "55", "63", "On track", "Target exceeded; one session each month", ["55", "56", "57", "58", "59", "60", "61", "62", "63"]], ["KPI-06", "Participants Who Attended a Full-Day Session", "100%", "81.8%", "68.6%", "Off track", "Falls as untrained participants join", ["81.8%", "81.8%", "75.0%", "75.0%", "71.4%", "71.4%", "69.4%", "67.6%", "68.6%"]], ["KPI-07", "Onboarding Sessions Delivered", "2", "3", "5", "On track", "Target exceeded; August session for new participants", ["3", "3", "3", "3", "4", "4", "4", "5", "5"]], ["KPI-08", "Operators Reporting a Profit", "100%", "n/a", "50%", "Off track", "September: 8 of 16 survey responses", ["-", "-", "-", "-", "-", "68%", "33%", "50%", "50%"]], ["KPI-09", "Participants Rating Training Positively", "90%", "78.6%", "Not re-measured", "Not assessed", "Measured once in February; no training since", ["-", "78.6%", "-", "-", "-", "-", "-", "-", "-"]], ["KPI-10", "Improvement in Living Standards", "90% improve", "Score 75.0", "Not scored", "Not assessed", "Household data collected for 17 in September; index weights not available", ["-", "75.0", "-", "-", "-", "-", "-", "-", "Not scored"]], ["KPI-11", "Participants Applying New Skills", "90%", "85.7%", "Not re-measured", "Not assessed", "Measured once in February", ["-", "85.7%", "-", "-", "-", "-", "-", "-", "-"]], ["KPI-12", "Participants Reporting Community Recognition", "90%", "100%", "Not re-measured", "Not assessed", "Measured once in February", ["-", "100%", "-", "-", "-", "-", "-", "-", "-"]], ["KPI-13", "Confidence in Commercial Skills", "Improve", "66.7% / 40%", "52.9% / 35.3% / 52.9%", "Off track", "Technical / negotiate a location / explain margins: two of three fell", ["-", "66.7% / 40%", "-", "-", "-", "-", "-", "-", "52.9% / 35.3% / 52.9%"]], ["KPI-14", "Entrepreneurial Identity and Agency", "Evidence", "Growth themes", "Machine paid off, second bought", "On track", "Operators show ownership: relocations, customer feedback, scaling", ["Personal growth", "-", "Innovative thinking", "-", "Customer feedback", "-", "-", "-", "Scaling"]]], "about": "About this data: month-end values from Enterprise Room, NAYAX and operator surveys. A dash means the KPI was not measured that month. Status as at September 2026."}, "oi": {"tab": "Insights", "tabs": ["Overview", "Recruitment", "Machine placement", "Revenue", "Profitability", "Training", "KPI scorecard", "Outcomes"], "idx": [1, 8], "about": "About this data: participant surveys in February 2026 (baseline) and September 2026, and operator interviews. Top-box means a score of 4 or 5 out of 5. Final for this cycle: no further outcome data will be collected.", "kpis": [{"name": "KPI-13 Confidence in commercial skills", "target": "Improve", "latest": "52.9% / 35.3% / 52.9%", "byMonth": ["", "66.7% / 40%", "", "", "", "", "", "", "52.9% / 35.3% / 52.9%"], "status": "Off track"}, {"name": "KPI-10 Improvement in living standards", "target": "90% improve", "latest": "Collected for 17, not scored", "byMonth": ["", "Score 75.0", "", "", "", "", "", "", "Collected for 17, not scored"], "status": "Not assessed"}, {"name": "KPI-14 Entrepreneurial identity and agency", "target": "Evidence of ownership behaviour", "latest": "Machine paid off, second machine bought", "byMonth": ["", "Growth themes", "", "", "", "", "", "", "Machine paid off, second machine bought"], "status": "On track"}], "chart": {"allType": "dumbbell", "monthType": "obars", "titleAll": "Confidence in commercial skills, February to September", "titleMonth": "Outcome scores against target", "db": [{"label": "Handling a technical breakdown", "a": 66.7, "b": 52.9}, {"label": "Negotiating a location", "a": 40.0, "b": 35.3}, {"label": "Explaining margins to a banker", "a": 40.0, "b": 52.9}], "ob": {"1": [{"label": "Rated training positively", "v": 78.6}, {"label": "Applied new skills", "v": 85.7}, {"label": "Recognised in their community", "v": 100.0}, {"label": "Confident with technical tasks", "v": 66.7}, {"label": "Confident negotiating and with margins", "v": 40.0}], "8": [{"label": "Confident with technical tasks", "v": 52.9}, {"label": "Confident negotiating a location", "v": 35.3}, {"label": "Confident explaining margins", "v": 52.9}]}, "target": 90}, "all": {"headline": "Participants started with strong community recognition, but confidence in commercial skills fell between February and September.", "stats": [{"value": "52.9%", "label": "Confident with technical tasks", "sub": "September 2026, down from 66.7% in February"}, {"value": "35.3%", "label": "Confident negotiating a location", "sub": "September 2026, the weakest skill"}, {"value": "17", "label": "Households surveyed on living standards", "sub": "September 2026. Not scored: the index weights were not available"}], "insights": ["The programme started strong on community recognition (100%) and skills application (85.7%).", "Confidence in commercial skills fell: technical tasks from 66.7% to 52.9%. Negotiating a location is lowest at 35.3%.", "The fall coincides with no training since January and tighter margins.", "Agency shows in behaviour: one operator paid off her machine and bought a second, and others negotiated relocations and customer feedback.", "Living standards data was collected for 17 households in September but cannot be compared with February without the index weights."], "head": ["Measure", "February 2026", "September 2026", "Target"], "rows": [["Rated training positively", "78.6%", "Not re-measured", "90%"], ["Living standards score", "75.0", "Collected, not scored", "Improve"], ["Applied new skills", "85.7%", "Not re-measured", "90%"], ["Recognised in their community", "100%", "Not re-measured", "90%"], ["Confident: technical tasks", "66.7%", "52.9%", "Improve"], ["Confident: negotiating and margins", "40%", "35.3% / 52.9%", "Improve"]], "recs": ["Focus the next training on negotiation and margin skills, the weakest areas.", "Use the same survey questions in every cycle so results compare directly.", "Share top operators' stories, such as paying off a machine, as peer learning.", "Agree the living standards scoring method before the next cycle, so household data can be scored."]}, "month": {"1": {"headline": "Baseline: strong community recognition, weaker commercial confidence.", "moveTitle": "WHAT WAS MEASURED", "stats": [{"value": "78.6%", "label": "Rated training positively", "sub": "Target 90%"}, {"value": "85.7%", "label": "Applied new skills", "sub": "Target 90%"}, {"value": "40%", "label": "Confident negotiating and with margins", "sub": "The weakest baseline score"}], "move": ["Baseline participant survey, February 2026.", "Household living standards baseline: average score 75.0."], "cmp": ["Community recognition (100%) is above the 90% target.", "Skills application (85.7%) and training satisfaction (78.6%) are below target."], "learn": ["Participants gain standing in their community before they gain commercial confidence.", "Negotiation and margin management are the weakest skills from the start."], "rec": ["Build negotiation and margin management into every training session."]}, "8": {"headline": "September: confidence in commercial skills has fallen since February.", "moveTitle": "WHAT WAS MEASURED", "stats": [{"value": "52.9%", "label": "Confident with technical tasks", "sub": "Down from 66.7% in February"}, {"value": "35.3%", "label": "Confident negotiating a location", "sub": "The weakest skill"}, {"value": "52.9%", "label": "Confident explaining margins", "sub": "To a banker or funder"}], "move": ["Operator survey of 17 participants, September 2026.", "Household living standards data collected for 17 participants; not scored."], "cmp": ["Technical confidence down 13.8 points since February.", "February asked about negotiating and margins as one question (40%); September asked them separately."], "learn": ["Confidence fell while no training ran and margins tightened.", "Agency is growing in behaviour even as confidence scores fall."], "rec": ["Run a negotiation and margin clinic for operators.", "Repeat the same questions in the next cycle."]}}}};
+    var CFG = ALLC[this.state.tab];
+    var names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
+    var m = this.state.m;
+    var isOvTab = this.state.tab === 'ov';
+    var isRep = !isOvTab && (m === 'rep' || m === 'all' || !(CFG.month && CFG.month[m]));
+    if (isRep) m = 8;
+    var isAll = isOvTab ? m === 'all' : isRep;
+    var v;
+    if (isOvTab) v = {};
+    else if (isRep) {
+      var mv8 = (CFG.month && CFG.month['8']) || {};
+      var ca = CFG.all || {};
+      v = { headline: mv8.headline, stats: mv8.stats, moveTitle: mv8.moveTitle, move: mv8.move, cmp: mv8.cmp, learn: mv8.learn, rec: mv8.rec,
+            insights: ca.insights, head: ca.head, rows: ca.rows, recs: ca.recs, open: ca.open };
+    } else v = CFG.month[m];
+    function pill(on) {
+      return 'min-width: 60px; height: 44px; padding: 0 16px; border-radius: 22px; font-size: 15px; font-weight: 600; border: 1px solid ' + (on ? '#1B2D71' : '#D5DBE8') + '; background: ' + (on ? '#1B2D71' : '#FFFFFF') + '; color: ' + (on ? '#FFFFFF' : '#1B2D71');
+    }
+    var months = isOvTab
+      ? [{ label: 'All months', pick: function () { self.setState({ m: 'all' }); }, style: pill(isAll) }].concat(CFG.idx.map(function (i) {
+          return { label: names[i], pick: function () { self.setState({ m: i }); }, style: pill(i === m) };
+        }))
+      : [{ label: 'Reporting Month: Sep', pick: function () { self.setState({ m: 'rep' }); }, style: pill(isRep) + '; padding: 0 20px' }].concat(CFG.idx.filter(function (i) { return i !== 8; }).map(function (i) {
+          return { label: names[i], pick: function () { self.setState({ m: i }); }, style: pill(!isRep && i === m) };
+        }));
+    var tabs = [['ov', 'Overview'], ['rec', 'Recruitment'], ['pl', 'Machine Placement'], ['rv', 'Revenue'], ['pr', 'Profitability'], ['tr', 'Training'], ['kpi', 'Full KPI Scorecard']].map(function (t) {
+      var on = t[0] === self.state.tab;
+      return { label: t[1], pick: function () { self.setState({ tab: t[0], m: t[0] === 'ov' ? 'all' : 'rep' }); },
+        style: 'min-height: 56px; padding: 18px 20px 15px; border: none; background: transparent; font-size: 17px; font-weight: ' + (on ? '800' : '600') + '; color: ' + (on ? '#1B2D71' : '#5A6690') + '; border-bottom: 4px solid ' + (on ? '#3DAB2F' : 'transparent') };
+    });
+    var SC = { 'On track': ['#3DAB2F', '#1E6B17'], 'At risk': ['#E69138', '#8A4B0F'], 'Off track': ['#CC0000', '#CC0000'], 'Closed': ['#8A8A8A', '#4A4A4A'], 'Not assessed': ['#8A8A8A', '#4A4A4A'] };
+    var EMPTY = { v: { headline: '', stats: [], insights: [], head: [], rows: [], recs: [] }, kpis: [], chartTitle: '', waffle: [], div: [], dn: { a: '', b: '', bo: '', center: '', rows: [] },
+      legend: [], cards: [], pbars: [], hbars: [], gauge: { len: '', pct: '', note: '' }, strip: [], bullets: [], dumb: [], obars: [], yoy: [],
+      showWaffle: false, showDiverge: false, showLine: false, showDonut: false, showLegend: false, showPbars: false, showHbars: false, showGauge: false, showStrip: false, showBullets: false,
+      monthOnly: false, showDumbbell: false, showObars: false, showYoy: false, isAll: false, notAll: false, thStyle: '', trStyle: '', hasOpen: false, openItems: [],
+      ov: { headline: '', tiles: [], revBars: [], partBars: [], profitNote: '' }, isKpi: false, kpiChips: [], kpiRows: [], kpiSummary: '', kpiMonths: [] };
+    function pack(extra) { var o = {}; for (var k in EMPTY) o[k] = EMPTY[k]; for (var k2 in extra) o[k2] = extra[k2]; return o; }
+    if (this.state.tab === 'kpi') {
+      var cnt = { 'On track': 0, 'At risk': 0, 'Off track': 0, 'Not assessed': 0 };
+      CFG.rows.forEach(function (r) { cnt[r[5]]++; });
+      var KC = { 'On track': '#3DAB2F', 'At risk': '#E69138', 'Off track': '#CC0000', 'Not assessed': '#8A93AE' };
+      function pc(n) { return Math.round(n / 14 * 100) + '%'; }
+      var summary = cnt['On track'] + ' of 14 KPIs (' + pc(cnt['On track']) + ') on track, ' + cnt['At risk'] + ' (' + pc(cnt['At risk']) + ') at risk, ' + cnt['Off track'] + ' (' + pc(cnt['Off track']) + ') off track and ' + cnt['Not assessed'] + ' (' + pc(cnt['Not assessed']) + ') not assessed this cycle.';
+      return pack({ isOv: false, notOv: false, isKpi: true, months: months, tabs: tabs, about: CFG.about, kpiSummary: summary,
+        monthRowStyle: 'display: none',
+        kpiChips: ['On track', 'At risk', 'Off track', 'Not assessed'].map(function (k) { return { label: k, n: String(cnt[k]),
+          dot: 'width: 14px; height: 14px; border-radius: 7px; display: inline-block; background: ' + KC[k], textStyle: 'font-size: 21px; font-weight: 800; color: ' + KC[k] }; }),
+        kpiMonths: names.map(function (n, i) { return { label: n, style: 'padding: 6px 8px; text-align: center; border-radius: 6px 6px 0 0' + (i === 8 ? '; background: #EEF2F9' : '') }; }),
+        kpiRows: CFG.rows.map(function (r) { return { id: r[0], measure: r[1], target: r[2], jan: r[3], sep: r[4], status: r[5], note: r[6],
+          months: r[7].map(function (x, i) { return { v: x, style: 'padding: 14px 8px; margin: -14px 0; text-align: center; font-size: 15px; ' + (i === 8 ? 'background: #EEF2F9; font-weight: 800' : '') + (x === '-' ? '; color: #B4BAD0' : '') }; }),
+          dot: 'width: 12px; height: 12px; border-radius: 6px; display: inline-block; flex-shrink: 0; background: ' + KC[r[5]], statusStyle: 'font-weight: 800; color: ' + KC[r[5]] }; }) });
+    }
+    if (this.state.tab === 'ov') {
+      var O = CFG, mi = isAll ? 8 : m;
+      function rk(x) { return 'R' + (x >= 1000000 ? (x / 1000000).toFixed(2) + 'm' : Math.round(x / 1000) + 'k'); }
+      function go(t) { return function () { self.setState({ tab: t, m: (isAll || m === 8 || ALLC[t].idx.indexOf(m) < 0) ? 'rep' : m }); }; }
+      var pf = O.prof[mi];
+      var tiles = [
+        { label: 'ACTIVE PARTICIPANTS', value: O.full[mi] + ' of 50', sub: 'With a full deposit. ' + O.part[mi] + ' more paying in instalments', go: go('rec') },
+        { label: 'MACHINES IN PLACE', value: O.inp[mi] + ' of 50', sub: O.wait[mi] + ' participants waiting for a machine', go: go('pl') },
+        { label: 'REVENUE TO DATE', value: rk(O.revCum[mi]), sub: 'Verified sales since January 2025', go: go('rv') },
+        { label: 'OPERATORS IN PROFIT', value: pf ? pf : 'From June', sub: pf ? names[mi] + ' survey' : 'Monthly profit survey starts June 2026', go: go('pr') },
+        { label: 'TRAINING COVERAGE', value: O.cov[mi] + '%', sub: 'Of active participants trained', go: go('tr') },
+        { label: 'KPI STATUS', value: '3 / 2 / 5', sub: 'On track, at risk and off track of 14 KPIs; 4 not assessed', go: go('kpi') },
+        { label: 'SUCCESS STORY', value: '1', sub: 'Operator paid off her machine and bought a second', go: go('pr') },
+        { label: 'WITHDRAWALS AFTER A DEPOSIT', value: (mi === 8 ? '10 of 45' : String(O.exits[mi])), sub: mi === 8 ? '22% of everyone who has paid a deposit' : 'Since launch, to the end of ' + names[mi], go: go('rec') }
+      ];
+      var DOTC = ['#CC0000', '#E69138', '#3DAB2F', '#CC0000', '#CC0000', '#E69138', '#3DAB2F', '#CC0000'];
+      tiles.forEach(function (t, k) { t.dot = 'width: 14px; height: 14px; border-radius: 7px; flex-shrink: 0; margin-top: 3px; background: ' + DOTC[k]; });
+      var revBars = O.rev.map(function (x, i) {
+        var on = isAll || i === m, n = O.net[i];
+        var ph = n !== null && n > 0 ? Math.round(n / 180000 * 190) : 0, nh = n !== null && n < 0 ? Math.max(3, Math.round(-n / 180000 * 190)) : 0;
+        return { label: names[i], rl: 'R' + Math.round(x / 1000) + 'k',
+          rs: 'width: 100%; border-radius: 4px 4px 0 0; height: ' + Math.round(x / 180000 * 190) + 'px; background: ' + (on ? '#1B2D71' : '#DDE2EE'),
+          ps: 'width: 30%; border-radius: 4px 4px 0 0; height: ' + ph + 'px; background: ' + (on ? '#3DAB2F' : '#CFE8CB'),
+          ns: 'width: 30%; height: ' + nh + 'px; background: ' + (on ? '#CC0000' : '#F0C2C2') };
+      });
+      var partBars = O.full.map(function (f, i) {
+        var on = isAll || i === m, ip = O.inp[i], wt = f - ip;
+        return { label: names[i], total: String(f),
+          is: 'height: ' + Math.round(ip / 40 * 230) + 'px; background: ' + (on ? '#1B2D71' : '#DDE2EE'),
+          ws: 'height: ' + Math.round(wt / 40 * 230) + 'px; box-sizing: border-box; border-radius: 4px 4px 0 0; background: ' + (on ? '#E7F5E4' : '#F3F5F9') + '; border: 2px solid ' + (on ? '#3DAB2F' : '#DDE2EE') };
+      });
+      var profitNote = 'Net profit is the total reported by survey respondents: R33.7k in June, R1.2k in July, a R1.4k loss in August (red) and R15.2k in September. Survey from June 2026.';
+      return pack({ isOv: true, notOv: false, months: months, tabs: tabs, about: O.about,
+        monthRowStyle: 'padding: 20px 72px; display: flex; align-items: center; gap: 16px',
+        ov: { headline: isAll ? O.headline : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September'][mi] + ' 2026: ' + O.full[mi] * 2 + '% of Places Filled, ' + O.inp[mi] * 2 + '% of Machines Placed and ' + O.cov[mi] + '% of Participants Trained',
+              tiles: tiles, revBars: revBars, partBars: partBars, profitNote: profitNote } });
+    }
+    var kpis = CFG.kpis.map(function (k) {
+      var now = isAll ? k.latest : k.byMonth[m];
+      return { name: k.name, target: k.target, nowLabel: isAll ? 'September 2026' : names[m] + ' 2026', now: now,
+        status: k.status, dot: 'width: 14px; height: 14px; border-radius: 7px; display: inline-block; background: ' + SC[k.status][0],
+        statusStyle: 'font-size: 21px; font-weight: 800; color: ' + SC[k.status][0] };
+    });
+    var ch = CFG.chart;
+    var type = isAll ? ch.allType : ch.monthType;
+    var chartTitle = isAll ? ch.titleAll : ch.titleMonth;
+    function sw(c, b) { return 'width: 16px; height: 16px; border-radius: 4px; box-sizing: border-box; background: ' + c + (b ? '; border: 2px solid ' + b : ''); }
+    var waffle = [], div = [], dn = { a: '0 754.0', b: '0 754.0', bo: '0', center: '', rows: [] }, legend = [];
+    if (type === 'waffle') {
+      var md = ch.md[m];
+      for (var q = 0; q < 50; q++) {
+        var col = q < md.a ? '#1B2D71' : (q < md.a + md.b ? '#9CC7E4' : '#EEF1F7');
+        waffle.push({ style: 'width: 52px; height: 52px; border-radius: 8px; background: ' + col });
+      }
+      legend = [{ name: 'Full Deposit (' + md.a + ')', sw: sw('#1B2D71') }, { name: 'Paying in Instalments (' + md.b + ')', sw: sw('#9CC7E4') }, { name: 'Open Place (' + (50 - md.a - md.b) + ')', sw: sw('#EEF1F7') }];
+    }
+    if (type === 'diverge') {
+      div = ch.div.map(function (d, i) {
+        return { label: names[i], total: String(d.t), jl: d.j ? '+' + d.j : '', ll: d.l ? '-' + d.l : '',
+          jbar: 'width: 60%; max-width: 56px; border-radius: 6px 6px 0 0; background: #3DAB2F; height: ' + (d.j * 44) + 'px',
+          lbar: 'width: 60%; max-width: 56px; border-radius: 0 0 6px 6px; background: #CC0000; height: ' + (d.l * 44) + 'px' };
+      });
+      legend = [{ name: 'Completed a Full Deposit', sw: sw('#3DAB2F') }, { name: 'Left the Programme', sw: sw('#CC0000') }];
+    }
+    if (type === 'line') {
+      legend = [{ name: 'Machines in Place', sw: sw('#1B2D71') }, { name: 'Participants Waiting for a Machine', sw: sw('#3DAB2F') }];
+    }
+    var fullNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September'];
+    var pbars = [];
+    if (type === 'pbars') {
+      pbars = ch.pb.map(function (x) {
+        var on = isAll || x.i === m;
+        return { label: fullNames[x.i], value: x.pct + '%', n: x.n,
+          valueStyle: 'font-size: 24px; font-weight: 800; color: ' + (on ? '#1B2D71' : '#8A93AE'),
+          barStyle: 'width: 100%; max-width: 120px; border-radius: 6px 6px 0 0; height: ' + Math.round(x.pct / 100 * 220) + 'px; background: ' + (on ? '#1B2D71' : '#DDE2EE'),
+          labelStyle: 'flex-grow: 1; flex-basis: 0; text-align: center; font-size: 15px; font-weight: ' + (x.i === m ? '700' : '500') + '; color: ' + (on ? '#1B2D71' : '#5A6690') };
+      });
+    }
+    var hbars = [], gauge = { len: '0 942.5', pct: '', note: '' }, strip = [], bullets = [];
+    if (type === 'hbars') {
+      hbars = ch.tr.map(function (x, i) {
+        var tot = x.t + x.u;
+        return { label: names[i], pct: x.c + '%',
+          tStyle: 'background: #1B2D71; width: ' + (x.t / tot * 100) + '%',
+          uStyle: 'background: #E69138; width: ' + (x.u / tot * 100) + '%' };
+      });
+      legend = [{ name: 'Trained', sw: sw('#1B2D71') }, { name: 'Not Yet Trained', sw: sw('#E69138') }];
+    }
+    if (type === 'gauge') {
+      var g = ch.tr[m];
+      gauge = { len: (g.c / 100 * 471.2).toFixed(1) + ' 942.5', pct: g.c + '%', note: g.t + ' trained, ' + g.u + ' not yet trained' };
+    }
+    if (type === 'strip') {
+      strip = ch.co.map(function (x, i) {
+        return { label: names[i], total: x.ca + ' sessions to date',
+          oc: x.out ? x.out + (x.out === 1 ? ' outcome' : ' outcomes') : 'No outcome',
+          ocStyle: 'font-size: 14px; font-weight: 700; text-align: center; padding: 4px 10px; border-radius: 12px; ' + (x.out ? 'background: #E7F5E4; color: #1E6B17' : 'color: #8A93AE'),
+          oStyle: x.o ? 'width: 30px; height: 30px; border-radius: 15px; background: #3DAB2F' : 'width: 30px; height: 30px' };
+      });
+      legend = [{ name: 'Partner alignment session', sw: sw('#1B2D71') }, { name: 'Onboarding session', sw: sw('#3DAB2F') }, { name: 'Outcome delivered', sw: sw('#E7F5E4', '#3DAB2F') }];
+    }
+    if (type === 'bullets') {
+      var cc = ch.co[m];
+      bullets = [['Partner alignment sessions', cc.ca, 50], ['Onboarding sessions', cc.co, 2]].map(function (b) {
+        var scale = Math.max(b[1], b[2]) * 1.15;
+        return { label: b[0], value: String(b[1]), target: String(b[2]),
+          fill: 'position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; background: #1B2D71; width: ' + (b[1] / scale * 100) + '%',
+          mark: 'position: absolute; top: -6px; bottom: -6px; width: 4px; background: #3DAB2F; left: ' + (b[2] / scale * 100) + '%' };
+      });
+    }
+    var dumb = [], obars = [];
+    if (type === 'dumbbell') {
+      dumb = ch.db.map(function (d) {
+        var lo = Math.min(d.a, d.b), hi = Math.max(d.a, d.b);
+        return { label: d.label, text: 'February ' + d.a + '%  to  September ' + d.b + '%',
+          line: 'position: absolute; top: 13px; height: 4px; background: ' + (d.b < d.a ? '#E69138' : '#3DAB2F') + '; left: ' + lo + '%; width: ' + (hi - lo) + '%',
+          dotA: 'position: absolute; top: 4px; width: 22px; height: 22px; margin-left: -11px; border-radius: 11px; background: #FFFFFF; border: 4px solid #9AA3BD; box-sizing: border-box; left: ' + d.a + '%',
+          dotB: 'position: absolute; top: 4px; width: 22px; height: 22px; margin-left: -11px; border-radius: 11px; background: #1B2D71; left: ' + d.b + '%' };
+      });
+      legend = [{ name: 'February 2026', sw: 'width: 16px; height: 16px; border-radius: 8px; box-sizing: border-box; border: 3px solid #9AA3BD' }, { name: 'September 2026', sw: 'width: 16px; height: 16px; border-radius: 8px; background: #1B2D71' }];
+    }
+    if (type === 'obars') {
+      obars = (ch.ob[String(m)] || []).map(function (o) {
+        return { label: o.label, text: o.v + '%', fill: 'position: absolute; left: 0; top: 0; bottom: 0; border-radius: 5px; background: #1B2D71; width: ' + o.v + '%' };
+      });
+    }
+    var yoy = [];
+    if (type === 'yoy') {
+      yoy = ch.yy.map(function (x, i) {
+        var on = isAll || i === m;
+        return { label: names[i], v: 'R' + Math.round(x.b / 1000) + 'k',
+          vStyle: 'font-size: 15px; font-weight: 800; color: ' + (on ? '#1B2D71' : '#9AA3BD'),
+          aStyle: 'width: 30%; max-width: 22px; border-radius: 4px 4px 0 0; background: ' + (on ? '#9CC7E4' : '#EEF1F7') + '; height: ' + Math.max(2, Math.round(x.a / 180000 * 240)) + 'px',
+          bStyle: 'width: 45%; max-width: 34px; border-radius: 4px 4px 0 0; background: ' + (on ? '#1B2D71' : '#DDE2EE') + '; height: ' + Math.round(x.b / 180000 * 240) + 'px',
+          lStyle: 'flex-grow: 1; flex-basis: 0; text-align: center; font-size: 15px; font-weight: ' + (i === m ? '700' : '500') + '; color: ' + (on ? '#1B2D71' : '#5A6690') };
+      });
+      legend = [{ name: '2026', sw: sw('#1B2D71') }, { name: 'Same Month in 2025', sw: sw('#9CC7E4') }];
+    }
+    if (type === 'donut') {
+      var dd = ch.md[m];
+      var Cc = 753.982;
+      var la = dd.a / 50 * Cc, lb = dd.b / 50 * Cc;
+      dn = { a: la.toFixed(1) + ' ' + Cc.toFixed(1), b: lb.toFixed(1) + ' ' + Cc.toFixed(1), bo: (-la).toFixed(1), center: String(dd.a),
+        rows: [{ n: String(dd.a), label: 'Machines in Place', sw: sw('#1B2D71') }, { n: String(dd.b), label: 'Participants Waiting', sw: sw('#3DAB2F') }, { n: String(50 - dd.a - dd.b), label: 'Places Without a Participant Yet', sw: sw('#EEF1F7') }] };
+    }
+    var cards = (isAll && !isRep) ? [] : [['move', v.moveTitle || 'WHAT CHANGED THIS MONTH'], ['cmp', 'HOW IT COMPARES'], ['learn', 'WHAT THE PROGRAMME IS LEARNING'], ['rec', 'WHAT WE RECOMMEND']].map(function (t) {
+      return { title: t[1], lines: v[t[0]], titleStyle: 'font-size: 16px; font-weight: 800; letter-spacing: 1px; color: ' + (t[0] === 'rec' ? '#2E7D23' : '#1B2D71') };
+    });
+    var cw = CFG.all.head.length;
+    var grid = 'display: grid; grid-template-columns: 1.2fr' + ' 1fr'.repeat(cw - 1) + '; padding: ';
+    return { v: v, months: months, tabs: tabs, kpis: kpis, chartTitle: chartTitle, waffle: waffle, div: div, dn: dn, legend: legend, cards: cards,
+      showWaffle: type === 'waffle', showDiverge: type === 'diverge', showLine: type === 'line', showDonut: type === 'donut', isOv: false, notOv: true, ov: { headline: '', hero: [], areas: [], chips: [], wins: [], flags: [] }, showYoy: type === 'yoy', yoy: yoy, isKpi: false, kpiChips: [], kpiRows: [], monthRowStyle: 'padding: 20px 72px; display: flex; align-items: center; gap: 16px', showLegend: ['waffle', 'diverge', 'line', 'hbars', 'strip', 'dumbbell', 'yoy'].indexOf(type) >= 0, showDumbbell: type === 'dumbbell', showObars: type === 'obars', dumb: dumb, obars: obars, showHbars: type === 'hbars', showGauge: type === 'gauge', showStrip: type === 'strip', showBullets: type === 'bullets', hbars: hbars, gauge: gauge, strip: strip, bullets: bullets, showPbars: type === 'pbars', pbars: pbars,
+      isAll: isAll, notAll: !isAll || isRep, monthOnly: !isAll, about: CFG.about, hasOpen: !!(isAll && v.open), openItems: (isAll && v.open) ? v.open : [],
+      thStyle: grid + '14px 18px; font-size: 16px; font-weight: 800; color: #5A6690',
+      trStyle: grid + '12px 18px; font-size: 18px; color: #1B2D71; border-top: 1px solid #E3E7F0' };
+  }
+}
+</script>
+</body>
+</html>
